@@ -23,7 +23,6 @@ const joinToInstances = (getIp) => {
 }
 
 const getIp = () => {
-    console.log('you called me, im GETIP')
     const ls = spawn('bash', ['./scripts/ip_reader.sh']);
     ls.stdout.on('data', (data) => {
         leader_ip = data.toString();
