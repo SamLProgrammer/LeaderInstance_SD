@@ -10,6 +10,9 @@ const newJoin = (req, res) => {
     console.log(req.query.ip)
     connections_list.push({ip: req.query.ip, leader: false})
     res.send({leader: leader_flag})
+    for(let i = 0; i < connections_list.length; i ++) {
+        console.log(connections_list[i]);
+    }
 }
 
 
@@ -21,7 +24,6 @@ const joinToInstances = (getIp) => {
         for (let i = 0; i < array.length - 1; i++) {
             nodes_ip_list.push(array[i]);
         }
-        console.log('==========')
         getIp();
     });
 }
