@@ -1,7 +1,7 @@
 const {Router} = require('express');
-const { launchNewInstance } = require('../controller/monitor');
+const { launchNewInstance, newJoin } = require('../controller/monitor');
 const router = Router();
 
-// router.get('/launchNew', launchNewInstance);
+router.get('/newJoin', newJoin);
 
 module.exports = router;
