@@ -2,8 +2,10 @@ const axios = require('axios')
 const { exec } = require('child_process');
 let nodes_ip_list = require('../data/connections')
 const PATH = process.cwd();
+let leader_ip;
 
-const joinToInstances = () => {
+
+const joinToInstances = (getIp) => {
     var fs = require('fs');
     fs.readFile('../ip_list.txt', function (err, data) {
         if (err) throw err;
@@ -11,13 +13,34 @@ const joinToInstances = () => {
         for (let i = 0; i < array.length - 1; i++) {
             nodes_ip_list.push(array[i]);
         }
-        for (let i = 0; i < nodes_ip_list.length; i++) {
-            console.log('ip : ' + nodes_ip_list[i])
-        }
-        console.log('===========')
+        getIp();
     });
 }
 
+const getIp = ()=> {
+    console.log('you called me, im GETIP')
+    const ls = spawn('bash', ['./scripts/ip_reader.sh']);
+        ls.stdout.on('data', (data) => {
+            leader_ip = data.toString();
+            console.log(' my ip: ' + leader_ip);
+            for (let i = 0; i < nodes_ip_list.length; i++) {
+                axios.get('http://' + nodes_ip_list + '/query?ip=' +
+                    leader_ip).then(function (response) {
+                        console.log('sent I guess')
+                    }).catch(err => {
+                        console.log('err')
+                    });
+            }
+        });
+        ls.stderr.on('data', (data) => {
+            console.error(`stderr: ${data}`);
+        });
+        ls.on('close', (code) => {
+            console.log(`child process exited with code ${code}`);
+        });
+}
+
 module.exports = {
-    joinToInstances
+    joinToInstances,
+    getIp
 }

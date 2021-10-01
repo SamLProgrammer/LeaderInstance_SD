@@ -1,7 +1,7 @@
 const PORT = 8000;
 const express = require('express');
 const cors = require('cors');
-const {joinToInstances} = require('../controller/monitor');
+const {joinToInstances, getIp} = require('../controller/monitor');
 
 
 class MyServer {
@@ -26,7 +26,7 @@ class MyServer {
     }
 
     join() {
-        joinToInstances();
+        joinToInstances(getIp);
     }
 
     listen() {
