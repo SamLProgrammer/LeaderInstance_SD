@@ -29,7 +29,7 @@ const getIp = () => {
         leader_ip = data.toString();
         console.log(' my ip: ' + leader_ip);
         for (let i = 0; i < nodes_ip_list.length; i++) {
-            axios.get('http://' + nodes_ip_list[i] + '/query?ip=' +
+            axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
                 leader_ip).then(function (response) {
                     console.log(response)
                 }).catch(err => {
