@@ -3,10 +3,13 @@ const { exec, spawn } = require('child_process');
 let nodes_ip_list = require('../data/connections')
 const PATH = process.cwd();
 let leader_ip;
+let connections_list = [];
+let leader_flag = false;
 
 const newJoin = (req, res) => {
     console.log(req.query.ip)
-    res.send({leader : false})
+    connections_list.push({ip: req.query.ip, leader: false})
+    res.send({leader: leader_flag})
 }
 
 
@@ -17,7 +20,7 @@ const joinToInstances = (getIp) => {
         var array = data.toString().split("\n");
         for (let i = 0; i < array.length - 1; i++) {
             nodes_ip_list.push(array[i]);
-        } //this works ok
+        }
         getIp();
     });
 }
@@ -25,16 +28,22 @@ const joinToInstances = (getIp) => {
 const getIp = () => {
     const ls = spawn('bash', ['./scripts/ip_reader.sh']);
     ls.stdout.on('data', (data) => {
-        leader_ip = data.toString();
-        console.log(' my ip: ' + leader_ip);
+        const local_ip = data.toString();
+        console.log(' my ip: ' + local_ip);
         for (let i = 0; i < nodes_ip_list.length; i++) {
             axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
-                leader_ip).then(function (response) {
-                    console.log(response.data)
+                local_ip).then(function (response) {
+                    const object = {ip: nodes_ip_list[i], leader: response.data.leader}
+                    connections_list.push(object);
                 }).catch(err => {
                     console.log('err')
                 });
         }
+        console.log('connections')
+        for(let i = 0; i < connections_list.length; i++) {
+            console.log(connections_list[i]);
+        }
+        console.log('=============')
     });
     ls.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
