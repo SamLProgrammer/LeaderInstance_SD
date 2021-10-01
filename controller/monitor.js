@@ -30,7 +30,7 @@ const getIp = () => {
         for (let i = 0; i < nodes_ip_list.length; i++) {
             axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
                 leader_ip).then(function (response) {
-                    console.log(response)
+                    console.log(response.data)
                 }).catch(err => {
                     console.log('err')
                 });
