@@ -13,6 +13,9 @@ const joinToInstances = (getIp) => {
         for (let i = 0; i < array.length - 1; i++) {
             nodes_ip_list.push(array[i]);
         }
+        for(i in nodes_ip_list) {
+            console.log(' xd: ' + nodes_ip_list[i])
+        }
         getIp();
     });
 }
@@ -24,7 +27,7 @@ const getIp = ()=> {
             leader_ip = data.toString();
             console.log(' my ip: ' + leader_ip);
             for (let i = 0; i < nodes_ip_list.length; i++) {
-                axios.get('http://' + nodes_ip_list + '/query?ip=' +
+                axios.get('http://' + nodes_ip_list[i] + '/query?ip=' +
                     leader_ip).then(function (response) {
                         console.log('sent I guess')
                     }).catch(err => {
