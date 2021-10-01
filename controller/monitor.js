@@ -34,9 +34,9 @@ const getIp = () => {
         const local_ip = data.toString();
         console.log(' my ip: ' + local_ip);
         for (let i = 0; i < nodes_ip_list.length; i++) {
-            console.log('aja: ' + i)
             axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
                 local_ip).then(function (response) {
+                    console.log('I got response: ' + i)
                     const object = {ip: nodes_ip_list[i], leader: response.data.leader}
                     connections_list.push(object);
                 }).catch(err => {
