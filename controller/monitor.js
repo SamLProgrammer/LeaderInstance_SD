@@ -21,11 +21,7 @@ const joinToInstances = (getIp) => {
         for (let i = 0; i < array.length - 1; i++) {
             nodes_ip_list.push(array[i]);
         }
-        console.log('ip_nodes')
-        for (let i = 0; i < nodes_ip_list.length; i++) {
-            console.log('--: ' + nodes_ip_list[i])
-        }
-        console.log('=========0')
+        console.log('==========')
         getIp();
     });
 }
@@ -36,6 +32,7 @@ const getIp = () => {
         const local_ip = data.toString();
         console.log(' my ip: ' + local_ip);
         for (let i = 0; i < nodes_ip_list.length; i++) {
+            console.log('aja: ' + i)
             axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
                 local_ip).then(function (response) {
                     const object = {ip: nodes_ip_list[i], leader: response.data.leader}
