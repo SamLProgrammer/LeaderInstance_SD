@@ -40,7 +40,7 @@ const getIp = () => {
                     const object = { ip: nodes_ip_list[i], leader: response.data.leader }
                     connections_list.push(object);
                     if(i == nodes_ip_list.length-1) {
-                        for(let i = 0; connections_list.length; i++) {
+                        for(let i = 0; i < connections_list.length; i++) {
                             console.log('nice : ' + connections_list[i])
                         }
                     }
