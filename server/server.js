@@ -26,12 +26,10 @@ class MyServer {
     }
 
     join() {
-        console.log('join got called')
         joinToInstances();
     }
 
     listen() {
-        console.log('ole prro')
         this.app.listen(this.port);
         console.log(`Server on! PORT ${this.port}`);
     }
