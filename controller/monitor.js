@@ -1,6 +1,6 @@
 const axios = require('axios')
 const { exec } = require('child_process');
-let { nodes_ip_list } = require('../data/connections')
+let nodes_ip_list = require('../data/connections')
 const PATH = process.cwd();
 
 const joinToInstances = () => {
