@@ -9,8 +9,8 @@ class MyServer {
         this.port = PORT;
         this.app = express();
         this.middleware();
-        this.join();
         this.routes();
+        this.join();
         this.listen();
     }
 
@@ -21,7 +21,7 @@ class MyServer {
     }
 
     routes() {
-        this.app.use('/launchNew', require('../routes/routes'));
+        // this.app.use('/launchNew', require('../routes/routes'));
         this.app.use('/', require('../routes/routes'));
     }
 
@@ -31,6 +31,7 @@ class MyServer {
     }
 
     listen() {
+        console.log('ole prro')
         this.app.listen(this.port);
         console.log(`Server on! PORT ${this.port}`);
     }
