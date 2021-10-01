@@ -11,6 +11,7 @@ class MyServer {
         this.middleware();
         this.join();
         this.routes();
+        this.listen();
     }
 
     middleware() {
@@ -24,14 +25,16 @@ class MyServer {
         this.app.use('/', require('../routes/routes'));
     }
 
+    join() {
+        console.log('join got called')
+        joinToInstances();
+    }
+
     listen() {
         this.app.listen(this.port);
         console.log(`Server on! PORT ${this.port}`);
     }
 
-    join() {
-        joinToInstances();
-    }
 }
 
 module.exports = MyServer
