@@ -11,7 +11,7 @@ const joinToInstances = () => {
         for (i in array) {
             nodes_ip_list.push(array[i]);
         }
-        for(let i = 0; i < array.length - 1 < i++) {
+        for(let i = 0; i < array.length - 1 ; i++) {
         console.log('===========')
         }
     });
