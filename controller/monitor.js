@@ -12,7 +12,7 @@ const joinToInstances = () => {
             nodes_ip_list.push(array[i]);
         }
         for( i in nodes_ip_list) {
-            console.log(nodes_ip_list[i]);
+            console.log('emm aja' + nodes_ip_list[i]);
         }
         console.log('===========')
     });
