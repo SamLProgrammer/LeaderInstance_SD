@@ -13,7 +13,8 @@ const joinToInstances = (getIp) => {
         for (let i = 0; i < array.length - 1; i++) {
             nodes_ip_list.push(array[i]);
         }
-        for(i in nodes_ip_list) {
+        for(let i = 0; i < nodes_ip_list.length; i++) {
+            console.log('imtrying')
             console.log(' xd: ' + nodes_ip_list[i])
         }
         getIp();
