@@ -11,10 +11,9 @@ const joinToInstances = () => {
         for (i in array) {
             nodes_ip_list.push(array[i]);
         }
-        for( i in nodes_ip_list) {
-            console.log('emm aja' + nodes_ip_list[i]);
-        }
+        for(let i = 0; i < array.length - 1 < i++) {
         console.log('===========')
+        }
     });
 }
 
