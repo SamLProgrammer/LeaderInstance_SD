@@ -16,7 +16,7 @@ const newJoin = (req, res) => {
 }
 
 const freeDockerResources = () => {
-    axios.post('http://172.30.96.1:5000/freeDockerResources');
+    axios.post('http://172.30.96.1:8000/freeDockerResources');
 }
 
 const joinToInstances = (getIp) => {
