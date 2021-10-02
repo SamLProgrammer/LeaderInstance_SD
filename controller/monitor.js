@@ -16,7 +16,7 @@ const newJoin = (req, res) => {
 }
 
 const freeDockerResources = () => {
-    const obj = {msg: free};
+    const obj = {msg: 'free'};
     axios.post('http://192.168.1.54:8000/freeDockerResources',
     obj).then(function (response) {
             console.log(response.data)
