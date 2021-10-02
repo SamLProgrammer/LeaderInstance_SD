@@ -1,0 +1,1 @@
+leader_ping=$(curl --max-time 2 -s -o /dev/null -w '%{http_code}' ${1}:5000/status)
