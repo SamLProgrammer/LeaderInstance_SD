@@ -15,6 +15,9 @@ const newJoin = (req, res) => {
     }
 }
 
+const freeDockerResources = () => {
+    axios.post('http://172.30.96.1:5000/freeDockerResources');
+}
 
 const joinToInstances = (getIp) => {
     var fs = require('fs');
@@ -39,11 +42,6 @@ const getIp = () => {
                     console.log('I got response: ' + i)
                     const object = { ip: nodes_ip_list[i], leader: response.data.leader }
                     connections_list.push(object);
-                    if(i == nodes_ip_list.length-1) {
-                        for(let i = 0; i < connections_list.length; i++) {
-                            console.log('nice : ' + connections_list[i].ip)
-                        }
-                    }
                 }).catch(err => {
                     console.log('err')
                 });
@@ -60,5 +58,7 @@ const getIp = () => {
 module.exports = {
     joinToInstances,
     getIp,
-    newJoin
+    newJoin, 
+    freeDockerResources,
+    setIO
 }
