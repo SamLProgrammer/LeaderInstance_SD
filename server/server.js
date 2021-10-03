@@ -1,16 +1,20 @@
 const PORT = 5000;
 const express = require('express');
 const cors = require('cors');
-const { joinToInstances, getIp, freeDockerResources } = require('../controller/monitor');
+const { joinToInstances, getIp, freeDockerResources, setIO } = require('../controller/monitor');
 
 
 class MyServer {
     constructor() {
         this.port = PORT;
         this.app = express();
+        this.server = require("http").createServer(this.app);
+        this.io = require("./sockets/sockets").initialize(this.server);
+        require('./consumer/consumer');
         this.middleware();
         this.routes();
         this.join();
+        this.exportIO();
         this.listen();
         this.NotifyLauncherFreeResources();
     }
@@ -23,6 +27,8 @@ class MyServer {
 
     routes() {
         this.app.use('/newJoin', require('../routes/routes'));
+        this.app.use('/pingLeader', require('../routes/routes'));
+        this.app.use('/leaderIsGone', require('../routes/routes'));
         this.app.use('/', require('../routes/routes'));
     }
 
@@ -30,8 +36,12 @@ class MyServer {
         joinToInstances(getIp);
     }
 
+    exportIO() {
+        setIO(this.io);
+    }
+
     listen() {
-        this.app.listen(this.port);
+        this.server.listen(this.port);
         console.log(`Server on! PORT ${this.port}`);
     }
 
