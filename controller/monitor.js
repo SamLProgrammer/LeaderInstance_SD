@@ -78,15 +78,12 @@ const getIp = () => {
 const pingToLeader = () => {
     setInterval(() => {
         if (leader_up) {
-            console.log('trying to ping')
             waiting_leader_response = true;
             axios.get('http://' + leader_ip + ':5000/pingLeader').then(function (response) {
                 if(response.status != 200) {
+                    console.log('leader has gone');
                     notifyNodesGoneLeader();
                 }
-                // console.log('leader response: ' + response.data);
-                // leader_response_limit = 0;
-                // waiting_leader_response = false;
             })
         }
     }, ping_lapse);
@@ -129,13 +126,12 @@ const setIO = (in_io) => {
 const turnOnSocket = () => {
     io.on('connection', socket => {
         socket.on('kill_me_babe', () => {
-            // axios.post('http://192.168.56.1:8000/freeDockerResources',
-            //     obj).then(function (response) {
-            //         console.log(response.data)
-            //     }).catch(err => {
-            //         console.log(err)
-            //     });
-            process.exit();
+            axios.post('http://192.168.56.1:8000/kill',
+                { code: my_code }).then(function (response) {
+                    console.log(response.data)
+                }).catch(err => {
+                    console.log(err)
+                });
         })
     })
 }
