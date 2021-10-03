@@ -125,6 +125,7 @@ const setIO = (in_io) => {
 const turnOnSocket = () => {
     io.on('connection', socket => {
         socket.on('kill_me_babe', () => {
+            console.log('nooo why D:')
             axios.post('http://192.168.56.1:8000/kill',
                 { code: my_code }).then(function (response) {
                     console.log(response.data)
