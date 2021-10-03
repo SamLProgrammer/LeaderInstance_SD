@@ -128,12 +128,15 @@ const setIO = (in_io) => {
     io = in_io;
 }
 
-io.on('connectio', socket => {
-    console.log('new client xd')
-    socket.on('kill_me_babe', () => {
-        console.log('client Is Trying to kill me D:');
+
+const turnOnSocket = () => {
+    io.on('connection', socket => {
+        console.log('new client xd')
+        socket.on('kill_me_babe', () => {
+            console.log('client Is Trying to kill me D:');
+        })
     })
-})
+}
 
 module.exports = {
     joinToInstances,
@@ -142,5 +145,6 @@ module.exports = {
     freeDockerResources,
     leaderListenPing,
     stopPingingLeader, 
-    setIO
+    setIO,
+    turnOnSocket
 }

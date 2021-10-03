@@ -1,7 +1,7 @@
 const PORT = 5000;
 const express = require('express');
 const cors = require('cors');
-const { joinToInstances, getIp, freeDockerResources, setIO } = require('../controller/monitor');
+const { joinToInstances, getIp, freeDockerResources, setIO, turnOnSocket } = require('../controller/monitor');
 
 
 class MyServer {
@@ -15,6 +15,7 @@ class MyServer {
         this.routes();
         this.join();
         this.exportIO();
+        this.initSocket();
         this.listen();
         this.NotifyLauncherFreeResources();
     }
@@ -38,6 +39,10 @@ class MyServer {
 
     exportIO() {
         setIO(this.io);
+    }
+
+    initSocket() {
+        turnOnSocket();
     }
 
     listen() {
