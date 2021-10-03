@@ -128,8 +128,11 @@ const setIO = (in_io) => {
     io = in_io;
 }
 
-io.on('kill_me_babe', () => {
-    console.log('he is trying to kill me');
+io.on('connectio', socket => {
+    console.log('new client xd')
+    socket.on('kill_me_babe', () => {
+        console.log('client Is Trying to kill me D:');
+    })
 })
 
 module.exports = {
