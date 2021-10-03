@@ -15,8 +15,8 @@ class MyServer {
         this.routes();
         this.join();
         this.exportIO();
-        this.initSocket();
         this.listen();
+        this.initSocket();
         this.NotifyLauncherFreeResources();
     }
 
