@@ -79,7 +79,7 @@ const pingToLeader = () => {
         if (leader_up) {
             waiting_leader_response = true;
             axios.get('http://' + leader_ip + ':5000/pingLeader').then(function (response) {
-                if(response.status != 200) {
+                if(response.data == undefined) {
                     console.log('leader has gone');
                     notifyNodesGoneLeader();
                 }
