@@ -59,7 +59,6 @@ const getIp = () => {
                         leader_ip = object.ip;
                         ping_lapse = getRandomInt(1, 10);
                         pingToLeader();
-                        responseLimit();
                         console.log('I will ping :' + leader_ip + 'every: ' + ping_lapse + ' seconds')
                     }
                 }).catch(err => {
