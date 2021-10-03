@@ -10,5 +10,5 @@ socket.on('free', (arg) => {
 });
 
 function killInstance(event, kill_button) {
-    io.emit('kill_me_babe');
+    socket.emit('kill_me_babe');
 }
