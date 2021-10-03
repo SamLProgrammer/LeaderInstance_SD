@@ -77,9 +77,12 @@ const pingToLeader = () => {
             console.log('trying to ping')
             waiting_leader_response = true;
             axios.get('http://' + leader_ip + ':5000/pingLeader').then(function (response) {
-                console.log('leader response: ' + response.data);
-                leader_response_limit = 0;
-                waiting_leader_response = false;
+                if(response.satus == 200) {
+                    console.log('leader is up')
+                }
+                // console.log('leader response: ' + response.data);
+                // leader_response_limit = 0;
+                // waiting_leader_response = false;
             })
         }
     }, ping_lapse);

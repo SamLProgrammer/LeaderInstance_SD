@@ -10,6 +10,4 @@ socket.on('free', (arg) => {
 });
 
 function killInstance(event, kill_button) {
-    alert('xd')
-    socket.emit('kill_me_babe');
 }
