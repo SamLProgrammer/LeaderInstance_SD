@@ -77,9 +77,9 @@ const pingToLeader = () => {
             console.log('trying to ping')
             waiting_leader_response = true;
             axios.get('http://' + leader_ip + ':5000/pingLeader').then(function (response) {
-                if(response.satus == 200) {
-                    console.log('leader is up')
-                }
+                console.log(' response : ' + response);
+                console.log(' data : ' + response.data);
+                console.log(' status: ' + response.status);
                 // console.log('leader response: ' + response.data);
                 // leader_response_limit = 0;
                 // waiting_leader_response = false;
@@ -124,7 +124,7 @@ function getRandomInt(min, max) {
 }
 
 const leaderListenPing = (req, res) => {
-    res.send('ok');
+    res.sendStatus(200);
 }
 
 const setIO = (in_io) => {
