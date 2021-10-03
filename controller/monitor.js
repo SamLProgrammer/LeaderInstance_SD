@@ -78,12 +78,15 @@ const pingToLeader = () => {
     setInterval(() => {
         if (leader_up) {
             waiting_leader_response = true;
-            axios.get('http://' + leader_ip + ':5000/pingLeader').then(function (response) {
-                if(response.data == undefined) {
-                    console.log('leader has gone');
-                    notifyNodesGoneLeader();
-                }
-            })
+            axios.get('http://' + leader_ip + ':5000/pingLeader')
+                .then(function (response) {
+                    if (response.data == undefined) {
+                        console.log('leader has gone');
+                        notifyNodesGoneLeader();
+                    }
+                }).catch(function (err) {
+                    alert('Cannot find Google');
+                })
         }
     }, ping_lapse);
 }
