@@ -1,5 +1,3 @@
-const { io } = require("../../server/sockets/sockets");
-
 window.onload = () => {
     const kill_button = document.getElementById('kill_instance_button');
     kill_button.addEventListener('click', function (event) { killInstance(event, kill_button) });
