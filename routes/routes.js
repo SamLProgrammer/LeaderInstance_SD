@@ -1,9 +1,11 @@
 const { Router } = require('express');
-const { launchNewInstance, newJoin, stopPing, status } = require('../controller/monitor');
+const { launchNewInstance, newJoin, stopPing, status, assignNewLead } = require('../controller/monitor');
 const router = Router();
 
 router.get('/newJoin', newJoin);
-router.get('/stopPing', stopPing);
+router.post('/stopPing', stopPing);
 router.get('/status', status);
+router.get('/assignNewLead', assignNewLead);
+router.post('/leaderChosen', leaderChosen);
 
 module.exports = router;

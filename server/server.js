@@ -24,6 +24,8 @@ class MyServer {
 		this.app.use('/newJoin', require('../routes/routes'));
 		this.app.use('/stopPing', require('../routes/routes'));
 		this.app.use('/status', require('../routes/routes'));
+		this.app.use('/assignNewLead', require('../routes/routes'));
+		this.app.use('/leaderChosen', require('../routes/routes'));
 		this.app.use('/', require('../routes/routes'));
 	}
 

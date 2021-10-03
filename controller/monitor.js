@@ -6,6 +6,9 @@ let leader_ip;
 let connections_list = [];
 let leader_flag = false;
 let myIntervalTime = randomTimeInterval();
+let leadAlive = false;
+let idListForNewLead = [];
+const myIP = getLocalIP();
 
 pingToLeader();
 
@@ -19,7 +22,36 @@ const status = (req, res) => {
 };
 
 const stopPing = (req, res) => {
-	clearInterval(pingToLeader);
+	leadAlive = false;
+	let id = req.data.id;
+	let myId = myIP.split('.'[3]);
+	if (myId > id) {
+		res.send({ ip: myIP });
+	}
+};
+
+const assignNewLead = (req, res) => {
+	leader_flag = true;
+	leader_ip = myIP;
+	notificationToInstances();
+};
+
+const leaderChosen = (req, res) => {
+	leader_ip = req.data.ip;
+};
+
+const notificationToInstances = () => {
+	for (let i = 0; i < connections_list.length; i++) {
+		const obj = { ip: myIP };
+		axios
+			.post('http://' + connections_list[i].ip + ':5000/leaderChosen', obj)
+			.then(function (response) {
+				console.log(response);
+			})
+			.catch((err) => {
+				console.log('err');
+			});
+	}
 };
 
 const freeDockerResources = () => {
@@ -62,6 +94,7 @@ const getIp = () => {
 					const object = { ip: nodes_ip_list[i], leader: response.data.leader };
 					connections_list.push(object);
 					if (object.leader) {
+						leadAlive = true;
 						leader_ip = object.ip;
 						console.log('leader : ' + leader_ip);
 					}
@@ -80,51 +113,77 @@ const getIp = () => {
 };
 
 const pingToLeader = setInterval(() => {
-	if (!leader_flag) {
-		const responseStatutsLead = spawn('bash', [`/scripts/ping.sh ${leader_ip}`]);
-		responseStatutsLead.stdout.on('data', (data) => {
-			if (data !== 200) {
-				stopPingToLead();
-			}
-		});
-		responseStatutsLead.stderr.on('data', (data) => {
-			console.error(`stderr: ${data}`);
-		});
-		responseStatutsLead.on('close', (code) => {
-			console.log(`child process exited with code ${code}`);
-		});
-		// exec(PATH + `/scripts/ping.sh ${leader_ip}`, (err, stdout, stderr) => {
-		// 	if (err) {
-		// 		console.error(err);
-		// 		return;
-		// 	}
-		// 	console.log(stdout);
-		// 	//falta if que cuando no responda el lider le envia a todas las instancias la orden de que paren
-		// 	stopPingToLead();
-		// });
-	}
-}, myIntervalTime);
-
-const stopPingToLead = () => {
-	for (let i = 0; i < nodes_ip_list.length; i++) {
+	if (!leader_flag && leadAlive) {
 		axios
-			.get('http://' + nodes_ip_list[i] + ':5000/stopPing')
+			.get('http://' + leader_ip + ':5000/status')
 			.then(function (response) {
-				const object = { ip: nodes_ip_list[i], leader: response.data.leader };
-				connections_list.push(object);
-				if (object.leader) {
-					leader_ip = object.ip;
-					console.log('leader : ' + leader_ip);
+				let result = response.data;
+				if (result !== 200) {
+					stopPingToLead();
 				}
 			})
 			.catch((err) => {
 				console.log('err');
 			});
 	}
+}, myIntervalTime);
+
+const stopPingToLead = () => {
+	for (let i = 0; i < connections_list.length; i++) {
+		if (connections_list[i].ip !== leader_ip) {
+			let objIP = { id: myIP.split('.')[3] };
+			axios
+				.post('http://' + nodes_ip_list[i] + ':5000/stopPing', objIP)
+				.then(function (response) {
+					idListForNewLead.push(response.data.ip);
+				})
+				.catch((err) => {
+					console.log('err');
+				});
+		}
+	}
+	chooseNewLead();
+};
+
+const nextLead = () => {
+	var array = [];
+	if (idListForNewLead != null) {
+		for (let i = 0; i < idListForNewLead.length; i++) {
+			array = idListForNewLead.split('.')[3];
+		}
+		let id = Math.max.apply(Math, array);
+		let ipLead = '119.18.0.' + id;
+		return ipLead;
+	} else {
+		return myIP;
+	}
+};
+
+const chooseNewLead = () => {
+	let ipNewLead = nextLead();
+	axios
+		.get('http://' + ipNewLead + ':5000/assignNewLead')
+		.then(function (response) {})
+		.catch((err) => {
+			console.log('err');
+		});
 };
 
 const randomTimeInterval = () => {
 	return Math.floor(2000 + Math.random() * 15000);
+};
+
+const getLocalIP = () => {
+	const ls = spawn('bash', ['./scripts/ip_reader.sh']);
+	ls.stdout.on('data', (data) => {
+		return data.toString();
+	});
+	ls.stderr.on('data', (data) => {
+		console.error(`stderr: ${data}`);
+	});
+	ls.on('close', (code) => {
+		console.log(`child process exited with code ${code}`);
+	});
 };
 
 module.exports = {
@@ -134,4 +193,6 @@ module.exports = {
 	freeDockerResources,
 	stopPing,
 	status,
+	assignNewLead,
+	leaderChosen,
 };
