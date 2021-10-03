@@ -85,7 +85,7 @@ const pingToLeader = () => {
                         notifyNodesGoneLeader();
                     }
                 }).catch(function (err) {
-                    alert('Cannot find Google');
+                    console.log('Cannot find Google');
                 })
         }
     }, ping_lapse);
