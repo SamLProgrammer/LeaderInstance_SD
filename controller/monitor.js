@@ -128,9 +128,14 @@ const setIO = (in_io) => {
 
 const turnOnSocket = () => {
     io.on('connection', socket => {
-        console.log('new client xd')
         socket.on('kill_me_babe', () => {
-            console.log('client Is Trying to kill me D:');
+            // axios.post('http://192.168.56.1:8000/freeDockerResources',
+            //     obj).then(function (response) {
+            //         console.log(response.data)
+            //     }).catch(err => {
+            //         console.log(err)
+            //     });
+            process.exit();
         })
     })
 }
