@@ -9,6 +9,7 @@ let ping_lapse;
 let leader_response_limit = 0;
 let leader_up = false;
 let io;
+let my_code;
 
 const newJoin = (req, res) => {
     connections_list.push({ ip: req.query.ip, leader: false })
@@ -45,6 +46,9 @@ const getIp = () => {
     const ls = spawn('bash', ['./scripts/ip_reader.sh']);
     ls.stdout.on('data', (data) => {
         const local_ip = data.toString();
+        const local_ip_array = local_ip.split(".");
+        my_code = local_ip_array[local_ip_array.length-1];
+        console.log('my code: ' + my_code)
         for (let i = 0; i < nodes_ip_list.length; i++) {
             axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
                 local_ip).then(function (response) {
@@ -77,9 +81,9 @@ const pingToLeader = () => {
             console.log('trying to ping')
             waiting_leader_response = true;
             axios.get('http://' + leader_ip + ':5000/pingLeader').then(function (response) {
-                console.log(' response : ' + response);
-                console.log(' data : ' + response.data);
-                console.log(' status: ' + response.status);
+                if(response.status != 200) {
+                    notifyNodesGoneLeader();
+                }
                 // console.log('leader response: ' + response.data);
                 // leader_response_limit = 0;
                 // waiting_leader_response = false;
@@ -88,23 +92,11 @@ const pingToLeader = () => {
     }, ping_lapse);
 }
 
-const responseLimit = () => {
-    setInterval(() => {
-        if (waiting_leader_response) {
-            if (leader_response_limit < 10) {
-                leader_response_limit++;
-            } else {
-                notifyNodesGoneLeader();
-            }
-        }
-    }, 1000);
-}
-
 const notifyNodesGoneLeader = () => {
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip != leader_ip) {
-            axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone',
-                obj).then(function (response) {
+            axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone', 
+            { code: my_code }).then(function (response) {
                     console.log(response.data)
                 }).catch(err => {
                     console.log(err)
@@ -113,10 +105,12 @@ const notifyNodesGoneLeader = () => {
     }
 }
 
-const stopPingingLeader = () => {
+const stopPingingLeader = (req, res) => {
     leader_up = false;
     waiting_leader_response = false;
-    res.send('ping stopped')
+    if(req.body.code < my_code) {
+        res.send({code : my_code}) // pilas este code es diferente al req.body.code!!
+    }
 }
 
 function getRandomInt(min, max) {
