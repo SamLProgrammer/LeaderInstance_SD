@@ -145,6 +145,16 @@ const stopPingToLead = () => {
 	chooseNewLead();
 };
 
+function chooseNewLead() {
+	let ipNewLead = nextLead();
+	axios
+		.get('http://' + ipNewLead + ':5000/assignNewLead')
+		.then(function (response) {})
+		.catch((err) => {
+			console.log('err');
+		});
+}
+
 const nextLead = () => {
 	var array = [];
 	if (idListForNewLead != null) {
@@ -157,16 +167,6 @@ const nextLead = () => {
 	} else {
 		return myIP;
 	}
-};
-
-const chooseNewLead = () => {
-	let ipNewLead = nextLead();
-	axios
-		.get('http://' + ipNewLead + ':5000/assignNewLead')
-		.then(function (response) {})
-		.catch((err) => {
-			console.log('err');
-		});
 };
 
 function randomTimeInterval() {
