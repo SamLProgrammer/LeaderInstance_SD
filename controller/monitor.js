@@ -80,7 +80,7 @@ const pingToLeader = () => {
             waiting_leader_response = true;
             axios.get('http://' + leader_ip + ':5000/pingLeader')
                 .then(function (response) {
-                }).catch(function (err) {
+                }).catch(function (err) { // leader no respondió
                     leader_up = false;
                     notifyNodesGoneLeader();
                 })
@@ -89,21 +89,24 @@ const pingToLeader = () => {
 }
 
 const notifyNodesGoneLeader = () => {
+    let list = []
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip != leader_ip) {
             axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone', 
             { code: my_code }).then(function (response) {
-                    console.log(response.data)
+                list.push(response.code)
                 }).catch(err => {
                     console.log(err)
                 });
         }
     }
+    for(let i = 0; i < list.length; i++) {
+        console.log(list[i])
+    }
 }
 
 const stopPingingLeader = (req, res) => {
     leader_up = false;
-    waiting_leader_response = false;
     if(req.body.code < my_code) {
         res.send({code : my_code}) // pilas este code es diferente al req.body.code!!
     }
