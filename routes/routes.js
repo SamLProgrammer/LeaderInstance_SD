@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { launchNewInstance, newJoin, stopPing, status, assignNewLead } = require('../controller/monitor');
+const { launchNewInstance, newJoin, stopPing, status, assignNewLead, leaderChosen } = require('../controller/monitor');
 const router = Router();
 
 router.get('/newJoin', newJoin);

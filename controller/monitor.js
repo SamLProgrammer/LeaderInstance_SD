@@ -10,8 +10,6 @@ let leadAlive = false;
 let idListForNewLead = [];
 const myIP = getLocalIP();
 
-pingToLeader();
-
 const newJoin = (req, res) => {
 	connections_list.push({ ip: req.query.ip, leader: false });
 	res.send({ leader: leader_flag });
@@ -112,21 +110,23 @@ const getIp = () => {
 	});
 };
 
-const pingToLeader = setInterval(() => {
-	if (!leader_flag && leadAlive) {
-		axios
-			.get('http://' + leader_ip + ':5000/status')
-			.then(function (response) {
-				let result = response.data;
-				if (result !== 200) {
-					stopPingToLead();
-				}
-			})
-			.catch((err) => {
-				console.log('err');
-			});
-	}
-}, myIntervalTime);
+function pingToLeader() {
+	setInterval(() => {
+		if (!leader_flag && leadAlive) {
+			axios
+				.get('http://' + leader_ip + ':5000/status')
+				.then(function (response) {
+					let result = response.data;
+					if (result !== 200) {
+						stopPingToLead();
+					}
+				})
+				.catch((err) => {
+					console.log('err');
+				});
+		}
+	}, myIntervalTime);
+}
 
 const stopPingToLead = () => {
 	for (let i = 0; i < connections_list.length; i++) {
@@ -169,11 +169,11 @@ const chooseNewLead = () => {
 		});
 };
 
-const randomTimeInterval = () => {
+function randomTimeInterval() {
 	return Math.floor(2000 + Math.random() * 15000);
-};
+}
 
-const getLocalIP = () => {
+function getLocalIP() {
 	const ls = spawn('bash', ['./scripts/ip_reader.sh']);
 	ls.stdout.on('data', (data) => {
 		return data.toString();
@@ -184,7 +184,9 @@ const getLocalIP = () => {
 	ls.on('close', (code) => {
 		console.log(`child process exited with code ${code}`);
 	});
-};
+}
+
+pingToLeader();
 
 module.exports = {
 	joinToInstances,
