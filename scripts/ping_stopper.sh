@@ -1,0 +1,1 @@
+curl -d '{"code":"$2"}' -H "Content-Type: application/json" -X POST http://${2}:5000/leaderIsGone

@@ -99,17 +99,27 @@ const notifyNodesGoneLeader = (showArray) => {
     let list = [];
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip != leader_ip) {
-            axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone',
-                { code: my_code }).then(function (response) {
-                    console.log('bgger xd: ' + response.data.code)
-                    list.push({ code: response.data.code })
-                    resp_counter++;
-                    if (resp_counter == connections_list.length - 1) {
-                        showArray(list);
-                    }
-                }).catch(err => {
-                    resp_counter++;
-                });
+            const ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + leader_ip, '' + my_code]);
+            ls.stdout.on('data', (data) => {
+                console.log('curl response : ' + data.toString())
+            });
+            ls.stderr.on('data', (data) => {
+                console.error(`stderr: ${data}`);
+            });
+            ls.on('close', (code) => {
+                console.log(`child process exited with code ${code}`);
+            });
+            // axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone',
+            //     { code: my_code }).then(function (response) {
+            //         console.log('bgger xd: ' + response.data.code)
+            //         list.push({ code: response.data.code })
+            //         resp_counter++;
+            //         if (resp_counter == connections_list.length - 1) {
+            //             showArray(list);
+            //         }
+            //     }).catch(err => {
+            //         resp_counter++;
+            //     });
         }
     }
 }
