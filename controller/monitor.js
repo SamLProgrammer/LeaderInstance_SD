@@ -107,6 +107,7 @@ const notifyNodesGoneLeader = () => {
                 });
         }
     }
+    console.log('xd : ' + list.length)
     for(let i = 0; i < list.length; i++) {
         console.log(' biggers than me: ' + list[i].code)
     }
