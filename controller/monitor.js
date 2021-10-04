@@ -9,6 +9,7 @@ let ping_lapse;
 let leader_up = false;
 let io;
 let my_code;
+let bigger_ids_list = [];
 
 const newJoin = (req, res) => {
     connections_list.push({ ip: req.query.ip, leader: false })
@@ -87,19 +88,19 @@ const pingToLeader = () => {
 }
 
 const notifyNodesGoneLeader = () => {
-    let list = []
+    let list = [];
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip != leader_ip) {
             axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone', 
             { code: my_code }).then(function (response) {
-                list.push(response.code)
+                list.push({code : response.data.code})
                 }).catch(err => {
                     console.log(err)
                 });
         }
     }
     for(let i = 0; i < list.length; i++) {
-        console.log(list[i])
+        console.log(' biggers than me: ' + list[i].code)
     }
 }
 
