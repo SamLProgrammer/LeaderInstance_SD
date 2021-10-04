@@ -101,6 +101,7 @@ const notifyNodesGoneLeader = (showArray) => {
         let resp_counter = 0;
         let list = [];
         for (let i = 0; i < connections_list.length; i++) {
+            console.log('i: ' + i)
             if (connections_list[i].ip != leader_ip) {
                 const ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
                 ls.stdout.on('data', (data) => {
