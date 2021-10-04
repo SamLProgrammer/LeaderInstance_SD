@@ -82,6 +82,7 @@ function pingToLeader() {
                 console.log('ping leader result: ' + data.toString())
                 if (data.toString() != 200) {
                     leader_up = false;
+                    first_to_notice = true;
                     notifyNodesGoneLeader(showList);
                 }
             });
