@@ -135,8 +135,8 @@ function showList(list) {
 
 const stopPingingLeader = (req, res) => {
     leader_up = false;
+    console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
     if (req.body.code < my_code) {
-        console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
         res.send({ code: my_code }) // pilas este code es diferente al req.body.code!!
     }
 }
