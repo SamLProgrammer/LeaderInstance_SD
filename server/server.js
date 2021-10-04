@@ -28,7 +28,7 @@ class MyServer {
 
     routes() {
         this.app.use('/newJoin', require('../routes/routes'));
-        this.app.use('/pingLeader', require('../routes/routes'));
+        this.app.use('/status', require('../routes/routes'));
         this.app.use('/leaderIsGone', require('../routes/routes'));
         this.app.use('/', require('../routes/routes'));
     }

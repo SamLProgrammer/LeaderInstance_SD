@@ -3,7 +3,7 @@ const { newJoin, leaderListenPing, stopPingingLeader } = require('../controller/
 const router = Router();
 
 router.get('/newJoin', newJoin);
-router.get('/pingLeader', leaderListenPing);
+router.get('/status', leaderListenPing);
 router.post('/leaderIsGone', stopPingingLeader);
 
 module.exports = router;

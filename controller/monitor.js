@@ -76,15 +76,19 @@ const getIp = () => {
 function pingToLeader()  {
     setInterval(() => {
         if (leader_up) {
-            console.log('outer ' + leader_up)
-            axios.get('http://' + leader_ip + ':5000/pingLeader')
-            .then(function (response) {
-                console.log(response.data)
-            }).catch(function (err) { // leader no respondió
-                leader_up = false;
-                console.log('inner ' + leader_up)
-                notifyNodesGoneLeader();
-            })
+            const ls = spawn('bash', ['./scripts/pinger.sh']);
+            ls.stdout.on('data', (data) => {
+                console.log('ping leader result: ' + data.toString())
+                if(data.toString() != 200) {
+                    leader_up = false;
+                }
+            });
+            ls.stderr.on('data', (data) => {
+                console.error(`stderr: ${data}`);
+            });
+            ls.on('close', (code) => {
+                console.log(`child process exited with code ${code}`);
+            });
         }
     }, ping_lapse*1000);
 }
@@ -118,7 +122,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-const leaderListenPing = (req, res) => {
+const statusResponse = (req, res) => {
     res.sendStatus(200);
 }
 
@@ -146,7 +150,7 @@ module.exports = {
     getIp,
     newJoin,
     freeDockerResources,
-    leaderListenPing,
+    leaderListenPing: statusResponse,
     stopPingingLeader, 
     setIO,
     turnOnSocket
