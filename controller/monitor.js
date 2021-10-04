@@ -101,8 +101,8 @@ const notifyNodesGoneLeader = (showArray) => {
         let resp_counter = 0;
         let list = [];
         for (let i = 0; i < connections_list.length; i++) {
-            console.log('i: ' + i)
             if (connections_list[i].ip != leader_ip) {
+                console.log('asking to : ' + connections_list[i].ip + ' to stop')
                 let ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
                 ls.stdout.on('data', (data) => {
                     console.log(' //=================== ')
@@ -114,16 +114,16 @@ const notifyNodesGoneLeader = (showArray) => {
                         console.log('all stopped their pinging')
                     }
                 });
-                ls.stderr.on('data', (data) => {
-                    resp_counter++;
-                    console.log('error response, counter: ' + resp_counter)
-                    if(resp_counter == connections_list.length-1) {
-                        console.log('all stopped their pinging')
-                    }
-                });
-                ls.on('close', (code) => {
-                    console.log(`child process exited with code ${code}`);
-                });
+                // ls.stderr.on('data', (data) => {
+                //     resp_counter++;
+                //     console.log('error response, counter: ' + resp_counter)
+                //     if(resp_counter == connections_list.length-1) {
+                //         console.log('all stopped their pinging')
+                //     }
+                // });
+                // ls.on('close', (code) => {
+                //     console.log(`child process exited with code ${code}`);
+                // });
             }
         }
     }
@@ -143,7 +143,7 @@ const stopPingingLeader = (req, res) => {
     if (req.body.code < my_code) {
         res.send({ code: my_code }) // pilas este code es diferente al req.body.code!!
     } else {
-        res.send('im minor than you srry')
+        res.send({code : 0})
     }
 }
 
