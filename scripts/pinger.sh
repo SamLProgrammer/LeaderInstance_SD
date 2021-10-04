@@ -1,1 +1,1 @@
-curl --max-time 2 -s -o /dev/null -w '%{http_code}' 119.18.0.${1}:5000/status
+curl --max-time 2 -s -o /dev/null -w '%{http_code}' ${1}:5000/status

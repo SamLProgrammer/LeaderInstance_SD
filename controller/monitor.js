@@ -42,7 +42,7 @@ const joinToInstances = (getIp) => {
 }
 
 const getIp = () => {
-    const ls = spawn('bash', ['./scripts/ip_reader.sh']);
+    const ls = spawn('bash', ['./scripts/ip_reader.sh ', leader_ip]);
     ls.stdout.on('data', (data) => {
         const local_ip = data.toString();
         const local_ip_array = local_ip.split(".");
