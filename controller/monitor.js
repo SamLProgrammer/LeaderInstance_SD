@@ -79,6 +79,7 @@ function pingToLeader()  {
             console.log('outer ' + leader_up)
             axios.get('http://' + leader_ip + ':5000/pingLeader')
             .then(function (response) {
+                console.log(response.data)
             }).catch(function (err) { // leader no respondió
                 leader_up = false;
                 console.log('inner ' + leader_up)
@@ -89,21 +90,21 @@ function pingToLeader()  {
 }
 
 const notifyNodesGoneLeader = () => {
-    let list = [];
+    // let list = [];
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip != leader_ip) {
             axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone', 
             { code: my_code }).then(function (response) {
                 console.log('bgger xd: ' + response.data.code)
-                list.push({code : response.data.code})
+                // list.push({code : response.data.code})
                 }).catch(err => {
                     console.log(err)
                 });
         }
     }
-    for(let i = 0; i < list.length; i++) {
-        console.log(' biggers than me: ' + list[i].code)
-    }
+    // for(let i = 0; i < list.length; i++) {
+    //     console.log(' biggers than me: ' + list[i].code)
+    // }
 }
 
 const stopPingingLeader = (req, res) => {
