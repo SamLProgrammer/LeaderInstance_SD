@@ -6,7 +6,7 @@ let leader_ip;
 let connections_list = [];
 let leader_flag = false;
 let ping_lapse;
-let leader_up = false;
+let leader_up = 0;
 let io;
 let my_code;
 
@@ -54,7 +54,7 @@ const getIp = () => {
                     const object = { ip: nodes_ip_list[i], leader: response.data.leader }
                     connections_list.push(object);
                     if (object.leader) {
-                        leader_up = true;
+                        leader_up = 1;
                         leader_ip = object.ip;
                         ping_lapse = getRandomInt(1, 10);
                         pingToLeader();
@@ -75,11 +75,11 @@ const getIp = () => {
 
 const pingToLeader = () => {
     setInterval(() => {
-        if (leader_up) {
+        if (leader_up == 1) {
             axios.get('http://' + leader_ip + ':5000/pingLeader')
                 .then(function (response) {
                 }).catch(function (err) { // leader no respondió
-                    leader_up = false;
+                    leader_up = 0;
                     console.log('leader fell')
                     notifyNodesGoneLeader();
                 })
@@ -106,7 +106,7 @@ const notifyNodesGoneLeader = () => {
 }
 
 const stopPingingLeader = (req, res) => {
-    leader_up = false;
+    leader_up = 0;
     if(req.body.code < my_code) {
         res.send({code : my_code}) // pilas este code es diferente al req.body.code!!
     }
