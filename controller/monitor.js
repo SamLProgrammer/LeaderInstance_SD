@@ -113,7 +113,6 @@ const notifyNodesGoneLeader = (showArray) => {
                     if(resp_counter == connections_list.length-1) {
                         console.log('all stopped their pinging')
                     }
-                    ls.kill();
                 });
                 ls.stderr.on('data', (data) => {
                     resp_counter++;
@@ -121,7 +120,6 @@ const notifyNodesGoneLeader = (showArray) => {
                     if(resp_counter == connections_list.length-1) {
                         console.log('all stopped their pinging')
                     }
-                    ls.kill();
                 });
                 ls.on('close', (code) => {
                     console.log(`child process exited with code ${code}`);
@@ -144,6 +142,8 @@ const stopPingingLeader = (req, res) => {
     console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
     if (req.body.code < my_code) {
         res.send({ code: my_code }) // pilas este code es diferente al req.body.code!!
+    } else {
+        res.send('im minor than you srry')
     }
 }
 
