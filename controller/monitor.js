@@ -46,7 +46,7 @@ const getIp = () => {
     ls.stdout.on('data', (data) => {
         const local_ip = data.toString();
         const local_ip_array = local_ip.split(".");
-        my_code = local_ip_array[local_ip_array.length - 1];
+        my_code = local_ip_array[local_ip_array.length - 1].trim();
         console.log('my code: ' + my_code)
         for (let i = 0; i < nodes_ip_list.length; i++) {
             axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
