@@ -81,7 +81,7 @@ function pingToLeader()  {
                 console.log('ping leader result: ' + data.toString())
                 if(data.toString() != 200) {
                     leader_up = false;
-                    notifyNodesGoneLeader();
+                    notifyNodesGoneLeader(showList);
                 }
             });
             ls.stderr.on('data', (data) => {
@@ -94,7 +94,7 @@ function pingToLeader()  {
     }, ping_lapse*1000);
 }
 
-const notifyNodesGoneLeader = () => {
+const notifyNodesGoneLeader = (showArray) => {
     let list = [];
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip != leader_ip) {
@@ -107,6 +107,10 @@ const notifyNodesGoneLeader = () => {
                 });
         }
     }
+    showArray(list);
+}
+
+function showList (list) {
     console.log('xd : ' + list.length)
     for(let i = 0; i < list.length; i++) {
         console.log(' biggers than me: ' + list[i].code)
