@@ -6,7 +6,6 @@ let leader_ip;
 let connections_list = [];
 let leader_flag = false;
 let ping_lapse;
-let leader_response_limit = 0;
 let leader_up = false;
 let io;
 let my_code;
@@ -77,7 +76,6 @@ const getIp = () => {
 const pingToLeader = () => {
     setInterval(() => {
         if (leader_up) {
-            waiting_leader_response = true;
             axios.get('http://' + leader_ip + ':5000/pingLeader')
                 .then(function (response) {
                 }).catch(function (err) { // leader no respondió
