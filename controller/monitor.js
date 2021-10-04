@@ -103,7 +103,7 @@ const notifyNodesGoneLeader = (showArray) => {
         for (let i = 0; i < connections_list.length; i++) {
             console.log('i: ' + i)
             if (connections_list[i].ip != leader_ip) {
-                const ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
+                let ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
                 ls.stdout.on('data', (data) => {
                     console.log(' //=================== ')
                     console.log('curl response : ' + data.toString().trim())
@@ -113,6 +113,7 @@ const notifyNodesGoneLeader = (showArray) => {
                     if(resp_counter == connections_list.length-1) {
                         console.log('all stopped their pinging')
                     }
+                    ls.kill();
                 });
                 ls.stderr.on('data', (data) => {
                     resp_counter++;
@@ -120,7 +121,7 @@ const notifyNodesGoneLeader = (showArray) => {
                     if(resp_counter == connections_list.length-1) {
                         console.log('all stopped their pinging')
                     }
-                    ls.kill('SIGINT')
+                    ls.kill();
                 });
                 ls.on('close', (code) => {
                     console.log(`child process exited with code ${code}`);
