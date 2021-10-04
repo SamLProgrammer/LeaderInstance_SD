@@ -85,7 +85,7 @@ function pingToLeader()  {
                 notifyNodesGoneLeader();
             })
         }
-    }, ping_lapse);
+    }, ping_lapse*1000);
 }
 
 const notifyNodesGoneLeader = () => {
