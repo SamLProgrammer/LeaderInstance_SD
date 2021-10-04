@@ -42,7 +42,7 @@ const joinToInstances = (getIp) => {
 }
 
 const getIp = () => {
-    const ls = spawn('bash', ['./scripts/ip_reader.sh ', leader_ip]);
+    const ls = spawn('bash', ['./scripts/ip_reader.sh ']);
     ls.stdout.on('data', (data) => {
         const local_ip = data.toString();
         const local_ip_array = local_ip.split(".");
@@ -76,7 +76,7 @@ const getIp = () => {
 function pingToLeader()  {
     setInterval(() => {
         if (leader_up) {
-            const ls = spawn('bash', ['./scripts/pinger.sh']);
+            const ls = spawn('bash', ['./scripts/pinger.sh', '' + leader_ip]);
             ls.stdout.on('data', (data) => {
                 console.log('ping leader result: ' + data.toString())
                 if(data.toString() != 200) {
