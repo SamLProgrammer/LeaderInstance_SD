@@ -76,11 +76,12 @@ const getIp = () => {
 function pingToLeader()  {
     setInterval(() => {
         if (leader_up) {
-            console.log(leader_up)
+            console.log('outer ' + leader_up)
             axios.get('http://' + leader_ip + ':5000/pingLeader')
             .then(function (response) {
             }).catch(function (err) { // leader no respondió
                 leader_up = false;
+                console.log('inner ' + leader_up)
                 notifyNodesGoneLeader();
             })
         }
