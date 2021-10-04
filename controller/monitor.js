@@ -120,6 +120,7 @@ const notifyNodesGoneLeader = (showArray) => {
                     if(resp_counter == connections_list.length-1) {
                         console.log('all stopped their pinging')
                     }
+                    ls.kill('SIGINT')
                 });
                 ls.on('close', (code) => {
                     console.log(`child process exited with code ${code}`);
