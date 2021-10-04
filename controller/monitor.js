@@ -46,7 +46,7 @@ const getIp = () => {
     ls.stdout.on('data', (data) => {
         const local_ip = data.toString();
         const local_ip_array = local_ip.split(".");
-        my_code = local_ip_array[local_ip_array.length-1];
+        my_code = local_ip_array[local_ip_array.length - 1];
         console.log('my code: ' + my_code)
         for (let i = 0; i < nodes_ip_list.length; i++) {
             axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
@@ -73,13 +73,13 @@ const getIp = () => {
     });
 }
 
-function pingToLeader()  {
+function pingToLeader() {
     setInterval(() => {
         if (leader_up) {
             const ls = spawn('bash', ['./scripts/pinger.sh', '' + leader_ip]);
             ls.stdout.on('data', (data) => {
                 console.log('ping leader result: ' + data.toString())
-                if(data.toString() != 200) {
+                if (data.toString() != 200) {
                     leader_up = false;
                     notifyNodesGoneLeader(showList);
                 }
@@ -91,36 +91,40 @@ function pingToLeader()  {
                 console.log(`child process exited with code ${code}`);
             });
         }
-    }, ping_lapse*1000);
+    }, ping_lapse * 1000);
 }
 
 const notifyNodesGoneLeader = (showArray) => {
+    let resp_counter = 0;
     let list = [];
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip != leader_ip) {
-            axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone', 
-            { code: my_code }).then(function (response) {
-                console.log('bgger xd: ' + response.data.code)
-                list.push({code : response.data.code})
+            axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone',
+                { code: my_code }).then(function (response) {
+                    console.log('bgger xd: ' + response.data.code)
+                    list.push({ code: response.data.code })
+                    resp_counter++;
+                    if (resp_counter == connections_list.length - 1) {
+                        showArray(list);
+                    }
                 }).catch(err => {
-                    console.log(err)
+                    resp_counter++;
                 });
         }
     }
-    showArray(list);
 }
 
-function showList (list) {
+function showList(list) {
     console.log('xd : ' + list.length)
-    for(let i = 0; i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
         console.log(' biggers than me: ' + list[i].code)
     }
 }
 
 const stopPingingLeader = (req, res) => {
     leader_up = false;
-    if(req.body.code < my_code) {
-        res.send({code : my_code}) // pilas este code es diferente al req.body.code!!
+    if (req.body.code < my_code) {
+        res.send({ code: my_code }) // pilas este code es diferente al req.body.code!!
     }
 }
 
@@ -157,7 +161,7 @@ module.exports = {
     newJoin,
     freeDockerResources,
     leaderListenPing: statusResponse,
-    stopPingingLeader, 
+    stopPingingLeader,
     setIO,
     turnOnSocket
 }
