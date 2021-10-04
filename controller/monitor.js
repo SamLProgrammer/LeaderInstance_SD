@@ -9,6 +9,7 @@ let ping_lapse;
 let leader_up = false;
 let io;
 let my_code;
+let first_to_notice;
 
 const newJoin = (req, res) => {
     connections_list.push({ ip: req.query.ip, leader: false })
@@ -95,35 +96,33 @@ function pingToLeader() {
 }
 
 const notifyNodesGoneLeader = (showArray) => {
-    let resp_counter = 0;
-    let list = [];
-    for (let i = 0; i < connections_list.length; i++) {
-        if (connections_list[i].ip != leader_ip) {
-            const ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
-            ls.stdout.on('data', (data) => {
-                console.log(' //=================== ')
-                console.log('curl response : ' + data.toString().trim())
-                console.log(' ===================// ')
-            });
-            ls.stderr.on('data', (data) => {
-                console.error(`stderr: ${data}`);
-            });
-            ls.on('close', (code) => {
-                console.log(`child process exited with code ${code}`);
-            });
-            // axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone',
-            //     { code: my_code }).then(function (response) {
-            //         console.log('bgger xd: ' + response.data.code)
-            //         list.push({ code: response.data.code })
-            //         resp_counter++;
-            //         if (resp_counter == connections_list.length - 1) {
-            //             showArray(list);
-            //         }
-            //     }).catch(err => {
-            //         resp_counter++;
-            //     });
+        let resp_counter = 0;
+        let list = [];
+        for (let i = 0; i < connections_list.length; i++) {
+            if (connections_list[i].ip != leader_ip) {
+                const ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
+                ls.stdout.on('data', (data) => {
+                    console.log(' //=================== ')
+                    console.log('curl response : ' + data.toString().trim())
+                    console.log(' ===================// ')
+                    resp_counter++;
+                    console.log('good response, counter: ' + resp_counter)
+                    if(resp_counter == connections_list.length-1) {
+                        console.log('all stopped their pinging')
+                    }
+                });
+                ls.stderr.on('data', (data) => {
+                    resp_counter++;
+                    console.log('error response, counter: ' + resp_counter)
+                    if(resp_counter == connections_list.length-1) {
+                        console.log('all stopped their pinging')
+                    }
+                });
+                ls.on('close', (code) => {
+                    console.log(`child process exited with code ${code}`);
+                });
+            }
         }
-    }
 }
 
 function showList(list) {
@@ -135,6 +134,7 @@ function showList(list) {
 
 const stopPingingLeader = (req, res) => {
     leader_up = false;
+    first_to_notice = false;
     console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
     if (req.body.code < my_code) {
         res.send({ code: my_code }) // pilas este code es diferente al req.body.code!!
