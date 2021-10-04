@@ -73,16 +73,16 @@ const getIp = () => {
     });
 }
 
-const pingToLeader = () => {
+function pingToLeader()  {
     setInterval(() => {
         if (leader_up) {
+            console.log(leader_up)
             axios.get('http://' + leader_ip + ':5000/pingLeader')
-                .then(function (response) {
-                }).catch(function (err) { // leader no respondió
-                    leader_up = false;
-                    console.log(leader_up)
-                    notifyNodesGoneLeader();
-                })
+            .then(function (response) {
+            }).catch(function (err) { // leader no respondió
+                leader_up = false;
+                notifyNodesGoneLeader();
+            })
         }
     }, ping_lapse);
 }
