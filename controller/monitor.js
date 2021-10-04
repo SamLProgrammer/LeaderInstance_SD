@@ -80,6 +80,7 @@ const pingToLeader = () => {
                 .then(function (response) {
                 }).catch(function (err) { // leader no respondió
                     leader_up = false;
+                    console.log('leader fell')
                     notifyNodesGoneLeader();
                 })
         }
