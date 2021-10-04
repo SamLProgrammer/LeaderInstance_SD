@@ -51,7 +51,6 @@ const getIp = () => {
         for (let i = 0; i < nodes_ip_list.length; i++) {
             axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
                 local_ip).then(function (response) {
-                    console.log('new join receiver answered me')
                     const object = { ip: nodes_ip_list[i], leader: response.data.leader }
                     connections_list.push(object);
                     if (object.leader) {
@@ -93,6 +92,7 @@ const notifyNodesGoneLeader = () => {
         if (connections_list[i].ip != leader_ip) {
             axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone', 
             { code: my_code }).then(function (response) {
+                console.log('bgger xd: ' + response.data.code)
                 list.push({code : response.data.code})
                 }).catch(err => {
                     console.log(err)
