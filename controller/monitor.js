@@ -61,7 +61,7 @@ const getIp = () => {
                         console.log('I will ping :' + leader_ip + 'every: ' + ping_lapse + ' seconds')
                     }
                 }).catch(err => {
-                    console.log('err')
+                    console.log('errxd')
                 });
         }
     });
