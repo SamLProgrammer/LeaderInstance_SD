@@ -97,6 +97,7 @@ function pingToLeader() {
 }
 
 const notifyNodesGoneLeader = (showArray) => {
+        if(first_to_notice) {
         let resp_counter = 0;
         let list = [];
         for (let i = 0; i < connections_list.length; i++) {
@@ -124,6 +125,7 @@ const notifyNodesGoneLeader = (showArray) => {
                 });
             }
         }
+    }
 }
 
 function showList(list) {
