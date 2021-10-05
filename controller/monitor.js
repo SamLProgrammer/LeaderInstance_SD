@@ -145,15 +145,15 @@ const showConnections = () => {
 }
 
 function biggerCodeDefiner(list) {
-    let ip;
+    let aux_ip;
     let code = 0;
     for (let i = 0; i < list.length; i++) {
         if (code < list[i].code) {
             code = list[i].code;
-            ip = list[i].ip;
+            aux_ip = list[i].ip;
         }
     }
-    ip.toString().trim();
+    const ip = aux_ip.toString().trim();
     console.log('la mayor de las que respondieron : ' + ip)
     return { ip: ip };
 }
