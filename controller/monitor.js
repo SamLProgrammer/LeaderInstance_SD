@@ -266,6 +266,7 @@ const newLeaderStablishment = (req, res) => {
 }
 
 function disputeFirst() {
+    console.log('TO DISPUTE IT')
     axios.post('http://192.168.56.1:8000/disputeFirst',
         {code: my_code});
 }
