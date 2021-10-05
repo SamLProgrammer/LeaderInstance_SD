@@ -127,7 +127,7 @@ const notifyNodesGoneLeader = (showArray) => {
 }
 
 function transferSelector(in_ip) {
-    axios.get('http://' + in_ip.ip + ':5000/selectorTransfer')
+    axios.get('http://' + in_ip.ip.trim() + ':5000/selectorTransfer')
     // .then(function (response) {
     //     console.log(response.data)
     // }).catch(err => {
