@@ -12,6 +12,7 @@ let io;
 let my_code;
 let first_to_notice;
 let local_ip;
+let on_dispute = false;
 
 const newJoin = (req, res) => {
     const connection_obj = { ip: req.query.ip, leader: false };
@@ -86,9 +87,9 @@ function pingToLeader() {
             const ls = spawn('bash', ['./scripts/pinger.sh', '' + leader_ip]);
             ls.stdout.on('data', (data) => {
                 console.log('ping leader result: ' + data.toString())
-                if (data.toString() != 200) {
-                    leader_up = false;
-                    first_to_notice = true;
+                leader_up = false;
+                first_to_notice = true;
+                if (data.toString() != 200 && !on_dispute) {
                     disputeFirst();
                 }
             });
@@ -164,6 +165,7 @@ const stopPingingLeader = (req, res) => {
             res.send({ code: 0, ip: local_ip })
         }
     }
+    on_dispute = false;
 }
 
 function getRandomInt(min, max) {
@@ -263,13 +265,14 @@ const newLeaderStablishment = (req, res) => {
 }
 
 function disputeFirst() {
+    on_dispute = true;
     console.log('TO DISPUTE IT')
     axios.post('http://192.168.56.1:8000/disputeFirst', {code: my_code})
-        // .then(function (response) {
-        //     console.log(response.data)
-        // }).catch(err => {
-        //     console.log(err)
-        // });
+        .then(function (response) {
+            console.log(response.data)
+        }).catch(err => {
+            console.log(err)
+        });
 }
 
 module.exports = {
