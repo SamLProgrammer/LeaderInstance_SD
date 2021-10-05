@@ -105,13 +105,10 @@ const notifyNodesGoneLeader = (showArray) => {
                 console.log('asking to : ' + connections_list[i].ip + ' to stop')
                 let ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
                 ls.stdout.on('data', (data) => {
-                    console.log(' //=================== ')
-                    console.log('curl response : ' + data.toString().trim())
-                    console.log(' ===================// ')
                     resp_counter++;
-                    console.log('good response, counter: ' + resp_counter)
+                    list.push({code: data.code})
                     if(resp_counter == connections_list.length-1) {
-                        console.log('all stopped their pinging')
+                        showList(list);
                     }
                 });
                 // ls.stderr.on('data', (data) => {
@@ -130,10 +127,11 @@ const notifyNodesGoneLeader = (showArray) => {
 }
 
 function showList(list) {
-    console.log('xd : ' + list.length)
+    console.log('==== Showing Bigger Codes List ====')
     for (let i = 0; i < list.length; i++) {
         console.log(' biggers than me: ' + list[i].code)
     }
+    console.log('==== Showing Bigger Codes List ====')
 }
 
 const stopPingingLeader = (req, res) => {
