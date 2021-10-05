@@ -156,6 +156,7 @@ function biggerCodeDefiner(list) {
 }
 
 const stopPingingLeader = (req, res) => {
+    console.log('asked me ' + req.body.ip + ' actual leader ' + leader_ip)
     if (leader_up && req.body.ip == leader_ip) {
         leader_up = false;
         first_to_notice = false;
