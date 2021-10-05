@@ -15,8 +15,14 @@ let local_ip;
 let on_dispute = false;
 
 const axios = instance.create();
-const axios2 = instance.create();
-axios2.defaults.timeout = 3000;
+let axios2;
+
+function axiosInstance () {
+    const axiosInstance = instance.create();
+    axiosInstance.defaults.timeout = 3000;
+    axios2 = axiosInstance;
+}
+
 
 const newJoin = (req, res) => {
     const connection_obj = { ip: req.query.ip, leader: false };
@@ -222,6 +228,7 @@ function takeTheLead() {
         axios.post('http://' + connections_list[i].ip + ':5000/newLeader',
             { ip: '' + local_ip })
     }
+    axiosInstance();
 }
 
 function getCodeFromAddress(ip_address) {
@@ -259,6 +266,7 @@ const newLeaderStablishment = (req, res) => {
         }
     }
     leader_up = true;
+    axiosInstance();
 }
 
 function disputeFirst() {
