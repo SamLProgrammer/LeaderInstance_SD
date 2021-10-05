@@ -1,4 +1,4 @@
-const axios = require('axios')
+const instance = require('axios')
 const { exec, spawn } = require('child_process');
 let nodes_ip_list = require('../data/connections')
 const PATH = process.cwd();
@@ -13,6 +13,9 @@ let my_code;
 let first_to_notice;
 let local_ip;
 let on_dispute = false;
+
+const axios = instance.create();
+axios.defaults.timeout = 3000;
 
 const newJoin = (req, res) => {
     const connection_obj = { ip: req.query.ip, leader: false };
