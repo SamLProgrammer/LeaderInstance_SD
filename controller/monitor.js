@@ -156,6 +156,7 @@ function biggerCodeDefiner(list) {
 }
 
 const stopPingingLeader = (req, res) => {
+    if(leader_up) {
     leader_up = false;
     first_to_notice = false;
     showConnections();
@@ -167,6 +168,7 @@ const stopPingingLeader = (req, res) => {
     } else {
         res.send({ code: 0, ip: local_ip })
     }
+}
 }
 
 function getRandomInt(min, max) {
