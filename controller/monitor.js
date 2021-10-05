@@ -264,12 +264,12 @@ const newLeaderStablishment = (req, res) => {
 
 function disputeFirst() {
     console.log('TO DISPUTE IT')
-    axios.post('http://192.168.56.1:8000/disputeFirst',
-        {code: my_code}).then(function (response) {
-            console.log(response.data)
-        }).catch(err => {
-            console.log(err)
-        });
+    axios.post('http://192.168.56.1:8000/disputeFirst', {code: my_code})
+        // .then(function (response) {
+        //     console.log(response.data)
+        // }).catch(err => {
+        //     console.log(err)
+        // });
 }
 
 module.exports = {
