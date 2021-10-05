@@ -88,11 +88,9 @@ function pingToLeader() {
             .then(function (response) {
                 console.log(response.status)
                 }).catch(err => {
-                    if(err.response) {
-                        console.log(error.response.status);
+                        console.log(err.response.status);
                         leader_up = false;
                         disputeFirst();
-                    }
                 });
         }
     }, ping_lapse * 1000);
