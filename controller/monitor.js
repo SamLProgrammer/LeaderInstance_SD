@@ -88,7 +88,7 @@ function pingToLeader() {
             .then(function (response) {
                 console.log(response.status)
                 }).catch(err => {
-                    if(error.response) {
+                    if(err.response) {
                         console.log(error.response.status);
                         leader_up = false;
                         disputeFirst();
