@@ -84,21 +84,16 @@ const getIp = () => {
 function pingToLeader() {
     setInterval(() => {
         if (!leader_flag &&  leader_up) {
-            const ls = spawn('bash', ['./scripts/pinger.sh', '' + leader_ip]);
-            ls.stdout.on('data', (data) => {
-                console.log('ping leader result: ' + data.toString())
-                if (data.toString() != 200 && !on_dispute) {
-                    leader_up = false;
-                    first_to_notice = true;
-                    disputeFirst();
-                }
-            });
-            ls.stderr.on('data', (data) => {
-                console.error(`stderr: ${data}`);
-            });
-            ls.on('close', (code) => {
-                console.log(`child process exited with code ${code}`);
-            });
+            axios.get('http://' + leader_ip + ':5000/status')
+            .then(function (response) {
+                console.log(response.status)
+                }).catch(err => {
+                    if(error.response) {
+                        console.log(error.response.status);
+                        leader_up = false;
+                        disputeFirst();
+                    }
+                });
         }
     }, ping_lapse * 1000);
 }
