@@ -267,11 +267,11 @@ const newLeaderStablishment = (req, res) => {
 
 function disputeFirst() {
     axios.post('http://192.168.56.1:8000/disputeFirst',
-        {ip: local_ip});
+        {code: my_code});
 }
 
 function disputeWinner()  {
-    
+
 }
 
 module.exports = {
