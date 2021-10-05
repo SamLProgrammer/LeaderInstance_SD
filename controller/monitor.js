@@ -107,9 +107,8 @@ const notifyNodesGoneLeader = (showArray) => {
     let resp_counter = 0;
     let list = [];
     for (let i = 0; i < connections_list.length; i++) {
-        if(connections_list[i].ip != leader_ip) {
-                if (first_to_notice) {
-                axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone',
+        if (connections_list[i].ip != leader_ip) {
+            axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone',
                 { code: my_code, ip: leader_ip }).then(function (response) {
                     console.log('response data : ' + JSON.stringify(response.data))
                     resp_counter++;
@@ -117,8 +116,8 @@ const notifyNodesGoneLeader = (showArray) => {
                         list.push({ code: response.data.code, ip: '' + response.data.ip })
                     }
                     if (resp_counter == connections_list.length - 1) {
-                        if(list.length > 0) {
-                        transferSelector(biggerCodeDefiner(list));
+                        if (list.length > 0) {
+                            transferSelector(biggerCodeDefiner(list));
                         } else {
                             takeTheLead();
                         }
@@ -126,7 +125,6 @@ const notifyNodesGoneLeader = (showArray) => {
                 }).catch(err => {
                     console.log(err)
                 });
-            }
         }
     }
 }
@@ -271,10 +269,6 @@ function disputeFirst() {
         {code: my_code});
 }
 
-function disputeWinner()  {
-
-}
-
 module.exports = {
     joinToInstances,
     getIp,
@@ -286,5 +280,5 @@ module.exports = {
     turnOnSocket,
     ecoSelector,
     newLeaderStablishment,
-    disputeWinner
+    notifyNodesGoneLeader
 }
