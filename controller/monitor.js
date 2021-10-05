@@ -109,6 +109,7 @@ const notifyNodesGoneLeader = (showArray) => {
         for (let i = 0; i < connections_list.length; i++) {
             if(connections_list[i].ip != leader_ip) {
                 console.log('asking to : ' + connections_list[i].ip + ' to stop')
+                console.log('aaaaaaja' + leader_ip)
                 let ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code, '' + leader_ip]);
                 ls.stdout.on('data', (data) => {
                     resp_counter++;
@@ -157,6 +158,8 @@ function biggerCodeDefiner(list) {
 
 const stopPingingLeader = (req, res) => {
     console.log('ip json ' + req.body.ip)
+    const flag = req.body.ip == leader_ip;
+    console.log('flaggie ' + flag)
     if (leader_up) {
         leader_up = false;
         first_to_notice = false;
