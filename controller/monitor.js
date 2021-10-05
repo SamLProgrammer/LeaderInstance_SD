@@ -218,11 +218,7 @@ function takeTheLead() {
     leader_flag = true;
     for (let i = 0; i < connections_list.length; i++) {
         axios.post('http://' + connections_list[i].ip + ':5000/newLeader',
-            { ip: local_ip }).then(function (response) {
-                console.log(response.data)
-            }).catch(err => {
-                console.log(err)
-            });
+            { ip: local_ip })
     }
 }
 
@@ -246,6 +242,7 @@ const turnOnSocket = () => {
 }
 
 const newLeaderStablishment = (req, res) => {
+    console.log('new leader ip: ' + req.body.ip)
     leader_ip = req.body.ip;
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip == leader_ip) {
