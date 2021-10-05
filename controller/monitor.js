@@ -15,7 +15,8 @@ let local_ip;
 let on_dispute = false;
 
 const axios = instance.create();
-axios.defaults.timeout = 3000;
+const axios2 = instance.create();
+axios2.defaults.timeout = 3000;
 
 const newJoin = (req, res) => {
     const connection_obj = { ip: req.query.ip, leader: false };
@@ -87,7 +88,7 @@ const getIp = () => {
 function pingToLeader() {
     setInterval(() => {
         if (!leader_flag &&  leader_up) {
-            axios.get('http://' + leader_ip + ':5000/status')
+            axios2.get('http://' + leader_ip + ':5000/status')
             .then(function (response) {
                 console.log(response.status)
                 }).catch(function (err) {
