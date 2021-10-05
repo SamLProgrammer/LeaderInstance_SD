@@ -83,7 +83,6 @@ const getIp = () => {
 function pingToLeader() {
     setInterval(() => {
         if (!leader_flag &&  leader_up) {
-            console.log('pingeando')
             const ls = spawn('bash', ['./scripts/pinger.sh', '' + leader_ip]);
             ls.stdout.on('data', (data) => {
                 console.log('ping leader result: ' + data.toString())
@@ -114,8 +113,6 @@ const notifyNodesGoneLeader = (showArray) => {
                 ls.stdout.on('data', (data) => {
                     resp_counter++;
                     const json_data = JSON.parse(data.toString())
-                    console.log('json parsed ' + json_data)
-                    console.log('json stringified ' + JSON.stringify(json_data))
                     if (json_data.code != 0) {
                         list.push({ code: json_data.code, ip: '' + json_data.ip })
                     }
@@ -154,9 +151,7 @@ function biggerCodeDefiner(list) {
             aux_ip = list[i].ip;
         }
     }
-    console.log('el error : ' + aux_ip)
     const ip = aux_ip.trim();
-    console.log('la mayor de las que respondieron : ' + ip)
     return { ip: ip };
 }
 
@@ -222,6 +217,7 @@ const ecoSelector = (req, res) => {
 }
 
 function takeTheLead() {
+    console.log('i took the lead!!!!!1')
     leader_flag = true;
     removeConnection(leader_ip);
     leader_ip = local_ip;
@@ -239,7 +235,6 @@ function getCodeFromAddress(ip_address) {
 const turnOnSocket = () => {
     io.on('connection', socket => {
         socket.on('kill_me_babe', () => {
-            console.log('nooo why D:')
             axios.post('http://192.168.56.1:8000/kill',
                 { code: my_code }).then(function (response) {
                     console.log(response.data)
