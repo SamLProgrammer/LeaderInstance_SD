@@ -112,7 +112,7 @@ const notifyNodesGoneLeader = (showArray) => {
                 { code: my_code, ip: leader_ip }).then(function (response) {
                     console.log('response data : ' + JSON.stringify(response.data))
                     resp_counter++;
-                    if (json_data.code != 0) {
+                    if (response.data.code != 0) {
                         list.push({ code: response.data.code, ip: '' + response.data.ip })
                     }
                     if (resp_counter == connections_list.length - 1) {
