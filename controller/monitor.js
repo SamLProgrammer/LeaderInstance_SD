@@ -157,7 +157,7 @@ function biggerCodeDefiner(list) {
 }
 
 const stopPingingLeader = (req, res) => {
-    console.log('flaggie ' + req.body)
+    console.log('flaggie ' + JSON.stringify(req.body))
     if (leader_up) {
         leader_up = false;
         first_to_notice = false;
