@@ -119,7 +119,9 @@ const notifyNodesGoneLeader = (showArray) => {
                         list.push({ code: json_data.code, ip: '' + json_data.ip })
                     }
                     if (resp_counter == connections_list.length - 1) {
+                        if(list.length > 0) {
                         transferSelector(biggerCodeDefiner(list));
+                        }
                     }
                 });
             }
