@@ -90,7 +90,6 @@ function pingToLeader() {
                     leader_up = false;
                     first_to_notice = true;
                     disputeFirst();
-                    // notifyNodesGoneLeader(biggerCodeDefiner);
                 }
             });
             ls.stderr.on('data', (data) => {
