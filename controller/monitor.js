@@ -10,6 +10,7 @@ let leader_up = false;
 let io;
 let my_code;
 let first_to_notice;
+let local_ip;
 
 const newJoin = (req, res) => {
     connections_list.push({ ip: req.query.ip, leader: false })
@@ -45,7 +46,7 @@ const joinToInstances = (getIp) => {
 const getIp = () => {
     const ls = spawn('bash', ['./scripts/ip_reader.sh']);
     ls.stdout.on('data', (data) => {
-        const local_ip = data.toString();
+        local_ip = data.toString();
         const local_ip_array = local_ip.split(".");
         my_code = local_ip_array[local_ip_array.length - 1].trim();
         console.log('my code: ' + my_code)
