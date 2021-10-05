@@ -58,7 +58,6 @@ const getIp = () => {
         for (let i = 0; i < nodes_ip_list.length; i++) {
             axios.get('http://' + nodes_ip_list[i] + ':5000/newJoin?ip=' +
                 local_ip).then(function (response) {
-                    console.log('response data: ' + JSON.stringify(response.data))
                     const object = { ip: nodes_ip_list[i], leader: response.data.leader }
                     connections_list.push(object);
                     if (object.leader) {
@@ -111,6 +110,7 @@ const notifyNodesGoneLeader = (showArray) => {
             if(connections_list[i].ip != leader_ip) {
                 axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone',
                 { code: my_code, ip: leader_ip }).then(function (response) {
+                    console.log('response data : ' + JSON.stringify(response.data))
                     resp_counter++;
                     if (json_data.code != 0) {
                         list.push({ code: response.data.code, ip: '' + response.data.ip })
@@ -157,11 +157,10 @@ function biggerCodeDefiner(list) {
 }
 
 const stopPingingLeader = (req, res) => {
-    console.log('flaggie ' + JSON.stringify(req.body))
-    if (leader_up) {
+    if (leader_up && req.body.ip == leader_ip) {
         leader_up = false;
         first_to_notice = false;
-        console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
+        console.log('a ver ' + req.body.ip + req.body.code + ' ? mine ' + my_code)
         if (req.body.code < my_code) {
             res.send({ code: my_code, ip: local_ip }) // pilas este code es diferente al req.body.code!!
         } else {
