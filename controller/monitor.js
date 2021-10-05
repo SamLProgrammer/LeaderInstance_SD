@@ -264,7 +264,7 @@ const newLeaderStablishment = (req, res) => {
 function disputeFirst() {
     on_dispute = true;
     console.log('TO DISPUTE IT')
-    axios.post('http://192.168.56.1:8000/disputeFirst', {code: my_code})
+    axios.post('http://192.168.56.1:8000/disputeFirst', {code: my_code, fallen: leader_ip})
         .then(function (response) {
             console.log(response.data)
         }).catch(err => {
