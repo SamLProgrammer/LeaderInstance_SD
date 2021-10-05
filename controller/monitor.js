@@ -87,8 +87,8 @@ function pingToLeader() {
             axios.get('http://' + leader_ip + ':5000/status')
             .then(function (response) {
                 console.log(response.status)
-                }).catch(err => {
-                        console.log(err.response.status);
+                }).catch(function (err) {
+                        console.log(err.status);
                         leader_up = false;
                         disputeFirst();
                 });
