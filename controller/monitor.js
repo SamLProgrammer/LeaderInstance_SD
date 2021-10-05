@@ -16,6 +16,7 @@ let on_dispute = false;
 
 const axios = instance.create();
 let axios2;
+axiosInstance();
 
 function axiosInstance () {
     const axiosInstance = instance.create();
