@@ -97,7 +97,7 @@ function pingToLeader() {
 }
 
 const notifyNodesGoneLeader = (showArray) => {
-        if(first_to_notice) {
+    if (first_to_notice) {
         let resp_counter = 0;
         let list = [];
         for (let i = 0; i < connections_list.length; i++) {
@@ -106,8 +106,12 @@ const notifyNodesGoneLeader = (showArray) => {
                 let ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
                 ls.stdout.on('data', (data) => {
                     resp_counter++;
-                    list.push({code: data.code})
-                    if(resp_counter == connections_list.length-1) {
+                    const json_data = JSON.parse(data.toString())
+                    console.log('json parsed ' + json_data)
+                    if (json_data.code != 0) {
+                        list.push({ code: json_data.code })
+                    }
+                    if (resp_counter == connections_list.length - 1) {
                         showList(list);
                     }
                 });
@@ -141,7 +145,7 @@ const stopPingingLeader = (req, res) => {
     if (req.body.code < my_code) {
         res.send({ code: my_code }) // pilas este code es diferente al req.body.code!!
     } else {
-        res.send({code : 0})
+        res.send({ code: 0 })
     }
 }
 
