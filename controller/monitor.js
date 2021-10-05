@@ -87,9 +87,9 @@ function pingToLeader() {
             const ls = spawn('bash', ['./scripts/pinger.sh', '' + leader_ip]);
             ls.stdout.on('data', (data) => {
                 console.log('ping leader result: ' + data.toString())
-                leader_up = false;
-                first_to_notice = true;
                 if (data.toString() != 200 && !on_dispute) {
+                    leader_up = false;
+                    first_to_notice = true;
                     disputeFirst();
                 }
             });
