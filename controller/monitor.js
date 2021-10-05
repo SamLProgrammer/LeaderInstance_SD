@@ -156,7 +156,7 @@ function biggerCodeDefiner(list) {
 
 const stopPingingLeader = (req, res) => {
     console.log('asked me ' + req.body.ip + ' actual leader ' + leader_ip)
-    if (leader_up && req.body.ip == leader_ip) {
+    if (req.body.ip == leader_ip) {
         first_to_notice = false;
         leader_up = false;
         if (req.body.code < my_code) {
@@ -266,7 +266,11 @@ const newLeaderStablishment = (req, res) => {
 function disputeFirst() {
     console.log('TO DISPUTE IT')
     axios.post('http://192.168.56.1:8000/disputeFirst',
-        {code: my_code});
+        {code: my_code}).then(function (response) {
+            console.log(response.data)
+        }).catch(err => {
+            console.log(err)
+        });
 }
 
 module.exports = {
