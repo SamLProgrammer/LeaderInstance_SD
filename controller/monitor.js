@@ -83,6 +83,7 @@ const getIp = () => {
 function pingToLeader() {
     setInterval(() => {
         if (leader_up) {
+            console.log('pingeando')
             const ls = spawn('bash', ['./scripts/pinger.sh', '' + leader_ip]);
             ls.stdout.on('data', (data) => {
                 console.log('ping leader result: ' + data.toString())
@@ -129,11 +130,6 @@ const notifyNodesGoneLeader = (showArray) => {
 function transferSelector(in_ip) {
     console.log('ip a selectorTransfer: ' + in_ip.ip)
     axios.get('http://' + in_ip.ip + ':5000/selectorTransfer')
-    // .then(function (response) {
-    //     console.log(response.data)
-    // }).catch(err => {
-    //     console.log(err)
-    // });
 }
 
 const showConnections = () => {
@@ -251,8 +247,9 @@ const turnOnSocket = () => {
 }
 
 const newLeaderStablishment = (req, res) => {
-    console.log('new leader ip: ' + req.body.ip)
-    leader_ip = req.body.ip;
+    const new_leader_ip = '' + req.body.ip;
+    leader_ip = new_leader_ip.trim();
+    console.log('new leader ip: ' + leader_ip)
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip == leader_ip) {
             connections_list[i].leader = true;
