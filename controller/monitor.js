@@ -115,7 +115,7 @@ const notifyNodesGoneLeader = (showArray) => {
                     const json_data = JSON.parse(data.toString())
                     console.log('json parsed ' + json_data)
                     if (json_data.code != 0) {
-                        list.push({ code: json_data.code, ip: json_data.ip })
+                        list.push({ code: json_data.code, ip: '' + json_data.ip })
                     }
                     if (resp_counter == connections_list.length - 1) {
                         transferSelector(biggerCodeDefiner(list));
