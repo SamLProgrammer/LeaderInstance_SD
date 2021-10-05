@@ -109,22 +109,12 @@ const notifyNodesGoneLeader = (showArray) => {
                     const json_data = JSON.parse(data.toString())
                     console.log('json parsed ' + json_data)
                     if (json_data.code != 0) {
-                        list.push({ code: json_data.code })
+                        list.push({code: json_data.code, ip: json_data.ip })
                     }
                     if (resp_counter == connections_list.length - 1) {
                         showList(list);
                     }
                 });
-                // ls.stderr.on('data', (data) => {
-                //     resp_counter++;
-                //     console.log('error response, counter: ' + resp_counter)
-                //     if(resp_counter == connections_list.length-1) {
-                //         console.log('all stopped their pinging')
-                //     }
-                // });
-                // ls.on('close', (code) => {
-                //     console.log(`child process exited with code ${code}`);
-                // });
             }
         }
     }
@@ -133,9 +123,19 @@ const notifyNodesGoneLeader = (showArray) => {
 function showList(list) {
     console.log('==== Showing Bigger Codes List ====')
     for (let i = 0; i < list.length; i++) {
-        console.log(' biggers than me: ' + list[i].code)
+        console.log(' biggers than me: ' + list[i].ip)
     }
     console.log('==== Showing Bigger Codes List ====')
+    let index = 0;
+    let ip;
+    let code = 0;
+    for (let i = 0; i < list.length; i++) {
+        if(code < list[i].code) {
+             code = list[i].code;
+             ip = list[i].ip;
+        }
+    }
+    console.log('biggest one: ' + ip)
 }
 
 const stopPingingLeader = (req, res) => {
@@ -143,9 +143,9 @@ const stopPingingLeader = (req, res) => {
     first_to_notice = false;
     console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
     if (req.body.code < my_code) {
-        res.send({ code: my_code }) // pilas este code es diferente al req.body.code!!
+        res.send({ code: my_code, ip: local_ip }) // pilas este code es diferente al req.body.code!!
     } else {
-        res.send({ code: 0 })
+        res.send({ code: 0 , ip: local_ip })
     }
 }
 
