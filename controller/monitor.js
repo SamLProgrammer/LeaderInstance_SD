@@ -153,6 +153,7 @@ function biggerCodeDefiner(list) {
             aux_ip = list[i].ip;
         }
     }
+    console.log('el error : ' + aux_ip)
     const ip = aux_ip.trim();
     console.log('la mayor de las que respondieron : ' + ip)
     return { ip: ip };
