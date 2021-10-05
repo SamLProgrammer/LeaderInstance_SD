@@ -4,6 +4,7 @@ let nodes_ip_list = require('../data/connections')
 const PATH = process.cwd();
 let leader_ip;
 let connections_list = [];
+let superior_connections_list = [];
 let leader_flag = false;
 let ping_lapse;
 let leader_up = false;
@@ -13,7 +14,11 @@ let first_to_notice;
 let local_ip;
 
 const newJoin = (req, res) => {
-    connections_list.push({ ip: req.query.ip, leader: false })
+    const connection_obj = { ip: req.query.ip, leader: false };
+    connections_list.push(connection_obj)
+    if (getCodeFromAddress(req.query.ip) > my_code) {
+        superior_connections_list.push(connection_obj)
+    }
     res.send({ leader: leader_flag })
 }
 
@@ -84,7 +89,7 @@ function pingToLeader() {
                 if (data.toString() != 200) {
                     leader_up = false;
                     first_to_notice = true;
-                    notifyNodesGoneLeader(showList);
+                    notifyNodesGoneLeader(biggerCodeDefiner);
                 }
             });
             ls.stderr.on('data', (data) => {
@@ -110,10 +115,10 @@ const notifyNodesGoneLeader = (showArray) => {
                     const json_data = JSON.parse(data.toString())
                     console.log('json parsed ' + json_data)
                     if (json_data.code != 0) {
-                        list.push({code: json_data.code, ip: json_data.ip })
+                        list.push({ code: json_data.code, ip: json_data.ip })
                     }
                     if (resp_counter == connections_list.length - 1) {
-                        showList(list);
+                        transferSelector(biggerCodeDefiner(list));
                     }
                 });
             }
@@ -121,32 +126,46 @@ const notifyNodesGoneLeader = (showArray) => {
     }
 }
 
-function showList(list) {
-    console.log('==== Showing Bigger Codes List ====')
-    for (let i = 0; i < list.length; i++) {
-        console.log(' biggers than me: ' + list[i].ip)
+function transferSelector(in_ip) {
+    axios.get('http://' + in_ip.ip + ':5000/selectorTransfer')
+    // .then(function (response) {
+    //     console.log(response.data)
+    // }).catch(err => {
+    //     console.log(err)
+    // });
+}
+
+const showConnections = () => {
+    console.log('//================== connections ====================')
+    for (let i = 0; i < connections_list.length; i++) {
+        console.log(connections_list[i].ip);
     }
-    console.log('==== Showing Bigger Codes List ====')
-    let index = 0;
+    console.log('================== connections ====================//')
+}
+
+function biggerCodeDefiner(list) {
     let ip;
     let code = 0;
     for (let i = 0; i < list.length; i++) {
-        if(code < list[i].code) {
-             code = list[i].code;
-             ip = list[i].ip;
+        if (code < list[i].code) {
+            code = list[i].code;
+            ip = list[i].ip;
         }
     }
-    console.log('biggest one: ' + ip)
+    return { ip: ip };
 }
 
 const stopPingingLeader = (req, res) => {
     leader_up = false;
     first_to_notice = false;
+    showConnections();
+    removeConnection(leader_ip);
+    showConnections();
     console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
     if (req.body.code < my_code) {
         res.send({ code: my_code, ip: local_ip }) // pilas este code es diferente al req.body.code!!
     } else {
-        res.send({ code: 0 , ip: local_ip })
+        res.send({ code: 0, ip: local_ip })
     }
 }
 
@@ -162,6 +181,50 @@ const setIO = (in_io) => {
     io = in_io;
 }
 
+const removeConnection = (ip_address) => {
+    let index1 = 0;
+    let index2 = 0;
+    for (let i = 0; i < connections_list.length; i++) {
+        if (connections_list[i].ip == ip_address) {
+            index1 = i;
+        }
+    }
+    connections_list.splice(index1, 1);
+    for (let i = 0; i < superior_connections_list.length; i++) {
+        if (superior_connections_list[i].ip == ip_address) {
+            index2 = i;
+        }
+    }
+    superior_connections_list.splice(index2, 1);
+}
+
+const ecoSelector = (req, res) => {
+    if (superior_connections_list.length > 0) {
+        for (let i = 0; i < superior_connections_list.length; i++) {
+            axios.post('http://' + superior_connections_list[i].ip + ':5000/ecoSelector',
+                { code: my_code });
+        }
+    } else {
+        takeTheLead();
+    }
+}
+
+function takeTheLead() {
+    leader_flag = true;
+    for (let i = 0; i < connections_list.length; i++) {
+        axios.post('http://' + connections_list[i].ip + ':5000/newLeader',
+            { ip: local_ip }).then(function (response) {
+                console.log(response.data)
+            }).catch(err => {
+                console.log(err)
+            });
+    }
+}
+
+function getCodeFromAddress(ip_address) {
+    const array = ip_address.split('.');
+    return array[array.length - 1].trim();
+}
 
 const turnOnSocket = () => {
     io.on('connection', socket => {
@@ -177,6 +240,22 @@ const turnOnSocket = () => {
     })
 }
 
+const newLeaderStablishment = (req, res) => {
+    leader_ip = req.body.ip;
+    for(let i = 0; i < connections_list.length; i++) {
+        if(connections_list[i].ip == leader_ip) {
+            connections_list[i].leader = true;
+            console.log('new Leader received: ' + connections_list[i].ip)
+        }
+    }
+    for(let i = 0; i < superior_connections_list.length; i++) {
+        if(superior_connections_list[i].ip == leader_ip) {
+            superior_connections_list[i].leader = true;
+        }
+    }
+    leader_up = true;
+}
+
 module.exports = {
     joinToInstances,
     getIp,
@@ -185,5 +264,7 @@ module.exports = {
     leaderListenPing: statusResponse,
     stopPingingLeader,
     setIO,
-    turnOnSocket
+    turnOnSocket,
+    ecoSelector,
+    newLeaderStablishment
 }

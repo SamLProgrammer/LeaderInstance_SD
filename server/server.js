@@ -30,6 +30,8 @@ class MyServer {
         this.app.use('/newJoin', require('../routes/routes'));
         this.app.use('/status', require('../routes/routes'));
         this.app.use('/leaderIsGone', require('../routes/routes'));
+        this.app.use('/selectorTransfer', require('../routes/routes'));
+        this.app.use('/ecoSelector', require('../routes/routes'));
         this.app.use('/', require('../routes/routes'));
     }
 
