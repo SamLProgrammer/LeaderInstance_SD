@@ -107,8 +107,8 @@ const notifyNodesGoneLeader = (showArray) => {
     if (first_to_notice) {
         let resp_counter = 0;
         let list = [];
+        removeConnection(leader_ip);
         for (let i = 0; i < connections_list.length; i++) {
-            if (connections_list[i].ip != leader_ip) {
                 console.log('asking to : ' + connections_list[i].ip + ' to stop')
                 let ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
                 ls.stdout.on('data', (data) => {
@@ -127,7 +127,6 @@ const notifyNodesGoneLeader = (showArray) => {
                         }
                     }
                 });
-            }
         }
     }
 }
