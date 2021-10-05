@@ -127,7 +127,8 @@ const notifyNodesGoneLeader = (showArray) => {
 }
 
 function transferSelector(in_ip) {
-    axios.get('http://' + in_ip.ip.toString().trim() + ':5000/selectorTransfer')
+    console.log('ip a selectorTransfer: ' + in_ip.ip)
+    axios.get('http://' + in_ip.ip + ':5000/selectorTransfer')
     // .then(function (response) {
     //     console.log(response.data)
     // }).catch(err => {
@@ -152,6 +153,8 @@ function biggerCodeDefiner(list) {
             ip = list[i].ip;
         }
     }
+    ip.toString().trim();
+    console.log('la mayor de las que respondieron : ' + ip)
     return { ip: ip };
 }
 
