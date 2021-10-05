@@ -51,7 +51,7 @@ const joinToInstances = (getIp) => {
 const getIp = () => {
     const ls = spawn('bash', ['./scripts/ip_reader.sh']);
     ls.stdout.on('data', (data) => {
-        local_ip = data.toString();
+        local_ip = data.toString().trim();
         const local_ip_array = local_ip.split(".");
         my_code = local_ip_array[local_ip_array.length - 1].trim();
         console.log('my code: ' + my_code)
