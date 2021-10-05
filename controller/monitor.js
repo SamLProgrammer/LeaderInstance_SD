@@ -190,18 +190,26 @@ const setIO = (in_io) => {
 const removeConnection = (ip_address) => {
     let index1 = 0;
     let index2 = 0;
+    let flag1 = false;
+    let flag2 = false;
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip == ip_address) {
             index1 = i;
+            flag1 = true;
         }
     }
-    connections_list.splice(index1, 1);
+    if (flag1) {
+        connections_list.splice(index1, 1);
+    }
     for (let i = 0; i < superior_connections_list.length; i++) {
         if (superior_connections_list[i].ip == ip_address) {
             index2 = i;
+            flag2 = true;
         }
     }
-    superior_connections_list.splice(index2, 1);
+    if (flag2) {
+        superior_connections_list.splice(index2, 1);
+    }
 }
 
 const ecoSelector = (req, res) => {
