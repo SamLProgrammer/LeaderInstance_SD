@@ -115,6 +115,7 @@ const notifyNodesGoneLeader = (showArray) => {
                     resp_counter++;
                     const json_data = JSON.parse(data.toString())
                     console.log('json parsed ' + json_data)
+                    console.log('json stringified ' + JSON.stringify(json_data))
                     if (json_data.code != 0) {
                         list.push({ code: json_data.code, ip: '' + json_data.ip })
                     }
