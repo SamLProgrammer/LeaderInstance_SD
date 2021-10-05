@@ -63,7 +63,7 @@ const getIp = () => {
                     if (object.leader) {
                         leader_up = true;
                         leader_ip = object.ip;
-                        ping_lapse = getRandomInt(2, 10);
+                        ping_lapse = getRandomInt(1, 3);
                         pingToLeader();
                         console.log('I will ping :' + leader_ip + 'every: ' + ping_lapse + ' seconds')
                     }
@@ -89,7 +89,8 @@ function pingToLeader() {
                 if (data.toString() != 200) {
                     leader_up = false;
                     first_to_notice = true;
-                    notifyNodesGoneLeader(biggerCodeDefiner);
+                    disputeFirst();
+                    // notifyNodesGoneLeader(biggerCodeDefiner);
                 }
             });
             ls.stderr.on('data', (data) => {
@@ -264,6 +265,15 @@ const newLeaderStablishment = (req, res) => {
     leader_up = true;
 }
 
+function disputeFirst() {
+    axios.post('http://192.168.56.1:8000/disputeFirst',
+        {ip: local_ip});
+}
+
+function disputeWinner()  {
+    
+}
+
 module.exports = {
     joinToInstances,
     getIp,
@@ -274,5 +284,6 @@ module.exports = {
     setIO,
     turnOnSocket,
     ecoSelector,
-    newLeaderStablishment
+    newLeaderStablishment,
+    disputeWinner
 }

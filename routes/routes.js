@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const { newJoin, leaderListenPing, stopPingingLeader, ecoSelector, newLeaderStablishment } = require('../controller/monitor');
+const { newJoin, leaderListenPing, stopPingingLeader, ecoSelector, newLeaderStablishment, disputeWinner } = require('../controller/monitor');
 const router = Router();
 
 router.get('/newJoin', newJoin);
@@ -8,5 +8,6 @@ router.post('/leaderIsGone', stopPingingLeader);
 router.get('/selectorTransfer', ecoSelector);
 router.post('/ecoSelector', ecoSelector);
 router.post('/newLeader', newLeaderStablishment);
+router.get('/disputeWinner', ecoSelector)
 
 module.exports = router;
