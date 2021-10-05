@@ -108,12 +108,10 @@ const notifyNodesGoneLeader = (showArray) => {
         let list = [];
         for (let i = 0; i < connections_list.length; i++) {
             if(connections_list[i].ip != leader_ip) {
-                console.log('asking to : ' + connections_list[i].ip + ' to stop')
-                const code_plus_leader_ip = my_code + '/' + leader_ip;
-                let ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + code_plus_leader_ip.toString()]);
-                ls.stdout.on('data', (data) => {
+                axios.post('http://' + connections_list[i].ip + ':5000/leaderIsGone',
+                { code: my_code, ip: leader_ip }).then(function (response) {
                     resp_counter++;
-                    const json_data = JSON.parse(data.toString())
+                    const json_data = JSON.parse(response.data.toString())
                     if (json_data.code != 0) {
                         list.push({ code: json_data.code, ip: '' + json_data.ip })
                     }
@@ -124,6 +122,8 @@ const notifyNodesGoneLeader = (showArray) => {
                             takeTheLead();
                         }
                     }
+                }).catch(err => {
+                    console.log(err)
                 });
             }
         }
