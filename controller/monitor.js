@@ -131,7 +131,6 @@ const notifyNodesGoneLeader = (showArray) => {
 }
 
 function transferSelector(in_ip) {
-    console.log('ip a selectorTransfer: ' + in_ip.ip)
     axios.get('http://' + in_ip.ip + ':5000/selectorTransfer')
 }
 
@@ -160,7 +159,6 @@ const stopPingingLeader = (req, res) => {
     if (leader_up && req.body.ip == leader_ip) {
         leader_up = false;
         first_to_notice = false;
-        console.log('a ver ' + req.body.ip + req.body.code + ' ? mine ' + my_code)
         if (req.body.code < my_code) {
             res.send({ code: my_code, ip: local_ip }) // pilas este code es diferente al req.body.code!!
         } else {
@@ -218,7 +216,7 @@ const ecoSelector = (req, res) => {
 }
 
 function takeTheLead() {
-    console.log('i took the lead!!!!!1')
+    console.log('I took the Lead')
     leader_flag = true;
     removeConnection(leader_ip);
     leader_ip = local_ip;
@@ -251,7 +249,6 @@ const newLeaderStablishment = (req, res) => {
     removeConnection(leader_ip);
     showConnections();
     leader_ip = req.body.ip.trim();
-    console.log('new leader ip: ' + leader_ip)
     for (let i = 0; i < connections_list.length; i++) {
         if (connections_list[i].ip == leader_ip) {
             connections_list[i].leader = true;
