@@ -82,7 +82,7 @@ const getIp = () => {
 
 function pingToLeader() {
     setInterval(() => {
-        if (leader_up) {
+        if (!leader_flag &&  leader_up) {
             console.log('pingeando')
             const ls = spawn('bash', ['./scripts/pinger.sh', '' + leader_ip]);
             ls.stdout.on('data', (data) => {
@@ -107,8 +107,8 @@ const notifyNodesGoneLeader = (showArray) => {
     if (first_to_notice) {
         let resp_counter = 0;
         let list = [];
-        removeConnection(leader_ip);
         for (let i = 0; i < connections_list.length; i++) {
+            if(connections_list[i].ip != leader_ip) {
                 console.log('asking to : ' + connections_list[i].ip + ' to stop')
                 let ls = spawn('bash', ['./scripts/ping_stopper.sh', '' + connections_list[i].ip, '' + my_code]);
                 ls.stdout.on('data', (data) => {
@@ -127,6 +127,7 @@ const notifyNodesGoneLeader = (showArray) => {
                         }
                     }
                 });
+            }
         }
     }
 }
@@ -163,9 +164,6 @@ const stopPingingLeader = (req, res) => {
     if (leader_up) {
         leader_up = false;
         first_to_notice = false;
-        showConnections();
-        removeConnection(leader_ip);
-        showConnections();
         console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
         if (req.body.code < my_code) {
             res.send({ code: my_code, ip: local_ip }) // pilas este code es diferente al req.body.code!!
@@ -225,6 +223,8 @@ const ecoSelector = (req, res) => {
 
 function takeTheLead() {
     leader_flag = true;
+    removeConnection(leader);
+    leader_ip = local_ip;
     for (let i = 0; i < connections_list.length; i++) {
         axios.post('http://' + connections_list[i].ip + ':5000/newLeader',
             { ip: '' + local_ip })
@@ -251,6 +251,9 @@ const turnOnSocket = () => {
 }
 
 const newLeaderStablishment = (req, res) => {
+    showConnections();
+    removeConnection(leader_ip);
+    showConnections();
     leader_ip = req.body.ip.trim();
     console.log('new leader ip: ' + leader_ip)
     for (let i = 0; i < connections_list.length; i++) {
