@@ -127,7 +127,7 @@ const notifyNodesGoneLeader = (showArray) => {
 }
 
 function transferSelector(in_ip) {
-    axios.get('http://' + in_ip.ip.trim() + ':5000/selectorTransfer')
+    axios.get('http://' + in_ip.ip.toString().trim() + ':5000/selectorTransfer')
     // .then(function (response) {
     //     console.log(response.data)
     // }).catch(err => {
@@ -156,19 +156,19 @@ function biggerCodeDefiner(list) {
 }
 
 const stopPingingLeader = (req, res) => {
-    if(leader_up) {
-    leader_up = false;
-    first_to_notice = false;
-    showConnections();
-    removeConnection(leader_ip);
-    showConnections();
-    console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
-    if (req.body.code < my_code) {
-        res.send({ code: my_code, ip: local_ip }) // pilas este code es diferente al req.body.code!!
-    } else {
-        res.send({ code: 0, ip: local_ip })
+    if (leader_up) {
+        leader_up = false;
+        first_to_notice = false;
+        showConnections();
+        removeConnection(leader_ip);
+        showConnections();
+        console.log('a ver ' + req.body.code + ' ? mine ' + my_code)
+        if (req.body.code < my_code) {
+            res.send({ code: my_code, ip: local_ip }) // pilas este code es diferente al req.body.code!!
+        } else {
+            res.send({ code: 0, ip: local_ip })
+        }
     }
-}
 }
 
 function getRandomInt(min, max) {
@@ -244,14 +244,14 @@ const turnOnSocket = () => {
 
 const newLeaderStablishment = (req, res) => {
     leader_ip = req.body.ip;
-    for(let i = 0; i < connections_list.length; i++) {
-        if(connections_list[i].ip == leader_ip) {
+    for (let i = 0; i < connections_list.length; i++) {
+        if (connections_list[i].ip == leader_ip) {
             connections_list[i].leader = true;
             console.log('new Leader received: ' + connections_list[i].ip)
         }
     }
-    for(let i = 0; i < superior_connections_list.length; i++) {
-        if(superior_connections_list[i].ip == leader_ip) {
+    for (let i = 0; i < superior_connections_list.length; i++) {
+        if (superior_connections_list[i].ip == leader_ip) {
             superior_connections_list[i].leader = true;
         }
     }
