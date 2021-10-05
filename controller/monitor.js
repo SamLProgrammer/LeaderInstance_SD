@@ -122,6 +122,8 @@ const notifyNodesGoneLeader = (showArray) => {
                     if (resp_counter == connections_list.length - 1) {
                         if(list.length > 0) {
                         transferSelector(biggerCodeDefiner(list));
+                        } else {
+                            takeTheLead();
                         }
                     }
                 });
