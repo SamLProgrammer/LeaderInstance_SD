@@ -223,7 +223,7 @@ const ecoSelector = (req, res) => {
 
 function takeTheLead() {
     leader_flag = true;
-    removeConnection(leader);
+    removeConnection(leader_ip);
     leader_ip = local_ip;
     for (let i = 0; i < connections_list.length; i++) {
         axios.post('http://' + connections_list[i].ip + ':5000/newLeader',
